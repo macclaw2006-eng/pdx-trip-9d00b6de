@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>波特兰轻轨地理地图 · 击剑家庭版</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body{ font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; color:#1c2433; background:#eef1f7; }
+  header{ padding:12px 16px 8px; }
+  h1{ font-size:18px; color:#0f1626; display:flex; align-items:center; gap:7px; }
+  .hint{ font-size:12px; color:#5b6b8c; margin-top:3px; }
+  .hint b{ color:#e23744; }
+  #map{ width:100%; height:74vh; min-height:520px; }
+
+  /* line legend + filters */
+  .bar{ display:flex; flex-wrap:wrap; gap:6px; padding:8px 16px 10px; align-items:center; }
+  .seg{ font-size:11px; font-weight:700; color:#56627d; margin-right:2px; }
+  .lg{ display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#2c3853; background:#fff; border:1px solid #e2e7f0; border-radius:20px; padding:3px 10px; cursor:pointer; user-select:none; }
+  .lg .ln{ width:15px; height:5px; border-radius:5px; display:inline-block; }
+  .lg .e{ font-size:13px; }
+  .lg.off{ opacity:.32; }
+
+  /* leaflet marker icon */
+  .mk{ width:34px; height:34px; border-radius:50%; background:#fff; border:2px solid #fff;
+       box-shadow:0 2px 7px rgba(20,40,80,.3); display:flex; align-items:center; justify-content:center; font-size:18px; position:relative; }
+  .mk .bdg{ position:absolute; top:-6px; right:-7px; background:#ff2442; color:#fff; font-size:8px; font-weight:800; border-radius:9px; padding:0 4px; line-height:13px; }
+  .mk-venue{ width:54px; height:54px; font-size:30px; border:3px solid #e23744;
+       box-shadow:0 0 0 5px rgba(226,55,68,.22),0 4px 12px rgba(20,40,80,.3); }
+  .mk-venue .vlbl{ position:absolute; bottom:-17px; left:50%; transform:translateX(-50%); background:#e23744; color:#fff; font-size:10px; font-weight:800; padding:0 8px; border-radius:20px; white-space:nowrap; }
+  /* station marker */
+  .stn{ display:flex; align-items:center; gap:4px; }
+  .stn .nd{ width:11px; height:11px; border-radius:50%; background:#fff; border:3px solid #555; box-shadow:0 1px 3px rgba(0,0,0,.35); flex:0 0 auto; }
+  .stn .nm{ background:rgba(255,255,255,.93); border:1px solid #d8dee8; border-radius:5px; padding:1px 5px; font-size:10px; font-weight:700; color:#3a4757; white-space:nowrap; box-shadow:0 1px 2px rgba(0,0,0,.12); }
+  .stn .nm small{ color:#e23744; font-weight:700; }
+  .stn.key .nd{ width:13px; height:13px; border-color:#e23744; }
+  .stn.key .nm{ border-color:#f3b8bd; color:#1c2433; }
+
+  /* modal (reused) */
+  .ov{ position:fixed; inset:0; background:rgba(15,22,38,.55); display:none; align-items:center; justify-content:center; z-index:1200; padding:18px; }
+  .ov.on{ display:flex; }
+  .modal{ background:#fff; border-radius:20px; max-width:430px; width:100%; max-height:86vh; overflow:auto; box-shadow:0 20px 60px rgba(0,0,0,.35); transform:scale(.9); opacity:0; transition:.18s; }
+  .ov.on .modal{ transform:scale(1); opacity:1; }
+  .mhead{ padding:18px 22px 14px; color:#fff; position:relative; }
+  .mhead .ic{ font-size:30px; } .mhead h2{ font-size:20px; margin-top:6px; }
+  .mhead .sub{ font-size:12.5px; opacity:.92; margin-top:3px; font-weight:600; }
+  .mhead .x{ position:absolute; top:14px; right:16px; width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.25); color:#fff; border:none; font-size:18px; cursor:pointer; }
+  .mbody{ padding:16px 22px 22px; }
+  .mbody .r{ display:flex; gap:9px; font-size:13.5px; color:#2c3853; padding:6px 0; line-height:1.5; border-top:1px solid #f0f2f8; }
+  .mbody .r:first-child{ border-top:none; }
+  .mbody .r .k{ color:#8a96ad; font-weight:800; min-width:52px; }
+  .mbody .r b{ color:#e23744; }
+  .gmap{ display:flex; align-items:center; gap:10px; text-decoration:none; background:#eafaf0; border:1px solid #b9e7cb; border-radius:13px; padding:11px 13px; margin-bottom:14px; }
+  .gmap:hover{ background:#dcf4e6; } .gmap .pin{ font-size:20px; }
+  .gmap .ga{ display:flex; flex-direction:column; line-height:1.3; }
+  .gmap .ga b{ font-size:13.5px; color:#157d44; } .gmap .ga .gs{ font-size:11px; color:#4f9e72; margin-top:1px; }
+  .gmap .ar{ margin-left:auto; color:#1f9d57; font-weight:800; font-size:16px; }
+  .xhsq{ background:#fff5f6; border:1px solid #ffd9de; border-radius:12px; padding:10px 13px; margin-top:12px; font-size:12.8px; color:#9a2230; line-height:1.55; }
+  .xhsq .t{ font-weight:800; color:#ff2442; margin-bottom:3px; font-size:12px; }
+  .links{ margin-top:12px; } .links .lt{ font-weight:800; color:#ff2442; font-size:12px; margin-bottom:7px; }
+  .links a{ display:flex; align-items:center; gap:6px; font-size:12.6px; color:#2c3853; text-decoration:none; padding:8px 11px; background:#f5f8ff; border:1px solid #e3ebfb; border-radius:10px; margin-bottom:6px; }
+  .links a:hover{ background:#e9f0ff; } .links a .ar{ margin-left:auto; color:#3563d6; font-weight:800; }
+  .h-venue{ background:linear-gradient(135deg,#e23744,#b3202c); } .h-hotel{ background:linear-gradient(135deg,#3563d6,#2546a8); }
+  .h-food{ background:linear-gradient(135deg,#f5772e,#d65416); } .h-see{ background:linear-gradient(135deg,#1f9d57,#157d44); }
+  .h-treat{ background:linear-gradient(135deg,#e8569e,#c43178); }
+  /* hub */
+  .hubov{ position:fixed; inset:0; background:rgba(15,22,38,.55); display:none; align-items:center; justify-content:center; z-index:1100; padding:18px; }
+  .hubov.on{ display:flex; }
+  .hub{ background:#fff; border-radius:22px; max-width:700px; width:100%; max-height:90vh; overflow:auto; box-shadow:0 20px 60px rgba(0,0,0,.35); transform:scale(.92); opacity:0; transition:.18s; }
+  .hubov.on .hub{ transform:scale(1); opacity:1; }
+  .hubhead{ padding:20px 24px 16px; color:#fff; position:relative; }
+  .hubhead .ic{ font-size:32px; } .hubhead h2{ font-size:21px; margin-top:6px; }
+  .hubhead .sub{ font-size:12.5px; opacity:.92; margin-top:3px; font-weight:600; }
+  .hubhead .x{ position:absolute; top:16px; right:18px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.25); color:#fff; border:none; font-size:18px; cursor:pointer; }
+  .hubgrid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px 20px 22px; }
+  .tile{ border:1px solid #eef1f7; border-radius:15px; padding:14px 15px; cursor:pointer; background:#fafbfe; transition:.12s; }
+  .tile:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(20,40,80,.12); }
+  .tile .tic{ font-size:23px; } .tile .tt{ font-weight:800; font-size:14.5px; margin-top:5px; color:#0f1626; }
+  .tile .sh{ font-size:12px; color:#6a7794; margin-top:3px; line-height:1.45; }
+  .tile .more{ font-size:11px; color:#e23744; font-weight:800; margin-top:7px; }
+  .hubnote{ margin:0 20px 20px; background:#fff5f6; border:1px solid #ffd9de; border-radius:12px; padding:11px 14px; font-size:12.5px; color:#9a2230; line-height:1.5; }
+  .leaflet-container{ background:#e8edf2; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🚆 波特兰轻轨地理地图 · 击剑家庭版</h1>
+    <div class="hint">真实地图底图 · MAX 各线按官方颜色标注 · <b>点任意图标看详情</b>(含 Google 地图地址 + 小红书帖子)· 可平移缩放</div>
+  </header>
+
+  <div class="bar" id="bar">
+    <span class="seg">线路:</span>
+    <div class="lg" data-line="red"><span class="ln" style="background:#d8232a;"></span>红线</div>
+    <div class="lg" data-line="blue"><span class="ln" style="background:#1a52a8;"></span>蓝线</div>
+    <div class="lg" data-line="green"><span class="ln" style="background:#0a8a3f;"></span>绿线</div>
+    <div class="lg" data-line="yellow"><span class="ln" style="background:#f5c518;"></span>黄线</div>
+    <div class="lg" data-line="orange"><span class="ln" style="background:#cd5c1a;"></span>橙线</div>
+    <div class="lg" data-line="sc"><span class="ln" style="background:#7a3fb0;"></span>有轨电车</div>
+    <div class="lg" data-stn="1"><span class="e">🚉</span>车站</div>
+    <span class="seg" style="margin-left:8px;">类别:</span>
+    <div class="lg" data-cat="venue"><span class="e">🏟️</span>场馆</div>
+    <div class="lg" data-cat="hotel"><span class="e">🏨</span>住宿</div>
+    <div class="lg" data-cat="see"><span class="e">🎡</span>景点</div>
+    <div class="lg" data-cat="food"><span class="e">🍜</span>美食</div>
+    <div class="lg" data-cat="treat"><span class="e">🍦</span>甜点咖啡</div>
+  </div>
+
+  <div id="map"></div>
+
+<!-- hub -->
+<div class="hubov" id="hubov"><div class="hub">
+  <div class="hubhead h-venue"><button class="x" id="hubClose">✕</button><div class="ic">🏟️</div>
+    <h2>会场配套中心 · Oregon Convention Center</h2>
+    <div class="sub">777 NE MLK Blvd · 红线 Convention Center 站下车即是 · 点下方任意方块再放大 🔍</div></div>
+  <div class="hubgrid" id="hubgrid"></div>
+  <div class="hubnote">⏰ <b>赛前一晚</b>在 FencingTime Live 复核当天检录时间与剑道;<b>到达日傍晚</b>先做掉装备检查、认好场地——赛日早上进馆直接热身。</div>
+</div></div>
+
+<!-- modal -->
+<div class="ov" id="ov"><div class="modal">
+  <div class="mhead" id="mhead"><button class="x" id="closeBtn">✕</button><div class="ic" id="mIc">📍</div>
+    <h2 id="mTitle"></h2><div class="sub" id="mSub"></div></div>
+  <div class="mbody" id="mBody"></div>
+</div></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ---- MAX line paths (approximate corridors, lat,lng) ----
+const LINES={
+  red:{color:'#d8232a',pts:[[45.4925,-122.8035],[45.5103,-122.7160],[45.5193,-122.6915],[45.5205,-122.6815],[45.5188,-122.6790],[45.5225,-122.6730],[45.5290,-122.6660],[45.5285,-122.6637],[45.5300,-122.6560],[45.5335,-122.6215],[45.5310,-122.5790],[45.5305,-122.5635],[45.5470,-122.5905],[45.5700,-122.5960],[45.5868,-122.5935]]},
+  blue:{color:'#1a52a8',pts:[[45.5230,-122.8690],[45.5045,-122.8190],[45.4925,-122.8035]],pts2:[[45.5305,-122.5635],[45.5160,-122.4880],[45.5025,-122.4245]]},
+  green:{color:'#0a8a3f',pts:[[45.5095,-122.6820],[45.5188,-122.6790],[45.5290,-122.6660],[45.5305,-122.5635],[45.5117,-122.5635],[45.4720,-122.5680]]},
+  yellow:{color:'#f5c518',pts:[[45.6065,-122.6855],[45.5650,-122.6755],[45.5460,-122.6695],[45.5290,-122.6660],[45.5188,-122.6790],[45.5095,-122.6820]]},
+  orange:{color:'#cd5c1a',pts:[[45.5095,-122.6820],[45.5045,-122.6705],[45.5040,-122.6660],[45.4790,-122.6510],[45.4460,-122.6420]]},
+  sc:{color:'#7a3fb0',dash:'6 8',pts:[[45.5305,-122.6985],[45.5290,-122.6850],[45.5230,-122.6820],[45.5120,-122.6790],[45.5005,-122.6710]]}
+};
+
+// ---- XHS post links ----
+const XHS={
+  kamen:'https://www.rednote.com/search_result/68a816c0000000001d017d3c?xsec_token=ABY2JDg5584BjX_ovUpk4XuXz9WD8ySNrT_yMNCnfbJVo=&xsec_source=',
+  yuan:'https://www.rednote.com/search_result/6868d7d1000000002400ddfd?xsec_token=ABs91W2rD6IxVOs75tIXJofn1zv5lKTAsguPkhZRqgOVY=&xsec_source=',
+  momo:'https://www.rednote.com/search_result/6916b14c000000000d03f6a6?xsec_token=ABqJKsm_wdZs3qkeF3uKUaah4CJNmgBiEIlVMscpN0mz4=&xsec_source=',
+  lumos:'https://www.rednote.com/search_result/6a1a3032000000001002d000?xsec_token=ABxtqyKzbLJzTNUb6G3fnUN5X2iKlu9GMBmykZpW4ehgo=&xsec_source=',
+  jennifer:'https://www.rednote.com/search_result/694ce145000000002202dfa3?xsec_token=AB6bKMYcZQwSahCH0IBtVMNn6V5639KVZPFUPsISrjVOM=&xsec_source=',
+  lanting:'https://www.rednote.com/search_result/699e8504000000002603f022?xsec_token=AB1yGRw901ukaNRb1JeagJmo12hkF0xeqPp1amnaRFvLU=&xsec_source=',
+  tujie:'https://www.rednote.com/search_result/69c04f0b000000002a03a778?xsec_token=ABnWG0IsWzF8qZK2Y7okYmNr_FvMc0D8NpFfvOXKZFXLE=&xsec_source=',
+  fay:'https://www.rednote.com/search_result/665bd23300000000050063f4?xsec_token=ABQ83Trb0HKFEvW3qJcp7diM3jcKTpD6zmxm7u8JvJnDE=&xsec_source=',
+  miriam:'https://www.rednote.com/search_result/666d3ace000000001c023645?xsec_token=ABGgDPK7d2neCC3XsjlhcRMrIRLT-CZM185mEj_5zxvj0=&xsec_source=',
+  huakai:'https://www.rednote.com/search_result/65f5fb0c00000000120216b7?xsec_token=ABPtY0EqOuzF3YDw_kxpgUcjFqOWSIdHXrrVIssZ7mIkU=&xsec_source='
+};
+
+// ---- POIs (real lat,lng) ----
+const POIS=[
+  {ll:[45.5285,-122.6637],cat:'venue',ic:'🏟️',hub:true,title:'Oregon Convention Center 基建场馆',sub:'点击进入「会场配套中心」'},
+  {ll:[45.5189,-122.6779],cat:'hotel',ic:'🏨',title:'The Nines',sub:'7/1–7/6 · Luxury Collection 五星',gmap:'The Nines Hotel Portland',addr:'525 SW Morrison St, Portland',
+   rows:[['位置','Morrison 站楼下就是电车站台'],['到会场','红线约 10 分钟'],['订房','2 Queen 双床 · 4 人入住 · 可免费取消']]},
+  {ll:[45.5213,-122.6804],cat:'hotel',ic:'🏨',title:'The Ritz-Carlton 丽兹',sub:'6/29–7/1 · 全城最新五星',gmap:'The Ritz-Carlton Portland',addr:'900 SW Washington St, Portland',
+   rows:[['位置','Galleria/SW 10th 站步行 2 街区'],['泳池','室内屋顶恒温泳池+Spa'],['换酒店','7/1 走到 Nines 仅 3 街区/5 分钟']]},
+  {ll:[45.5700,-122.5960],cat:'hotel',ic:'🏨',title:'Cascade Station 省钱住宿区',sub:'红线机场段 · 备选',gmap:'Cascade Station Portland Oregon',addr:'NE Cascades Pkwy, Portland',
+   rows:[['特点','连锁酒店区,最便宜·新·治安好'],['到会场','红线约 20 分钟'],['周边','Target+超市+连锁餐厅']]},
+  {ll:[45.5103,-122.7160],cat:'see',ic:'🎡',title:'Washington Park',sub:'红线直达 · 非赛日首选(半天)',gmap:'Washington Park Portland Oregon',addr:'Washington Park, Portland OR',
+   rows:[['玩什么','动物园 + 日式庭园 + 玫瑰园(7月盛开)'],['交通','红线西行直达,全美最深地铁站'],['园内','免费接驳车串起三个点']]},
+  {ll:[45.5232,-122.6815],cat:'see',ic:'📚',title:"Powell's 书店",sub:'全球最大独立书店 · Pearl 区',gmap:"Powell's City of Books Portland",addr:'1005 W Burnside St, Portland',links:[{t:"0卡momo·Portland攻略(Powell's/MUJI)",k:'momo'}],
+   rows:[['亮点','占一整个街区,藏书超百万'],['顺路','旁边 Pearl District / 紀伊國屋 + MUJI']]},
+  {ll:[45.5298,-122.6980],cat:'see',ic:'🚶',title:'Pearl District / Nob Hill',sub:'CityWalk 最佳街区 · 有轨电车',gmap:'NW 23rd Ave Nob Hill Portland',addr:'NW 23rd Ave, Portland',links:[{t:'0卡momo·便宜好吃好买好看',k:'momo'}],
+   rows:[['Pearl','Walk Score 97 全城第一'],['Nob Hill','NW 23rd 林荫道,精品店+餐厅'],['交通','Streetcar NS 线直达,共用日票']]},
+  {ll:[45.5188,-122.6793],cat:'see',ic:'🛍️',title:'Pioneer Square 市中心核心',sub:'红线/电车 · 购物餐饮聚集',gmap:'Pioneer Courthouse Square Portland',addr:'701 SW 6th Ave, Portland',
+   rows:[['周边','Nordstrom · Columbia 旗舰(免税划算)'],['美食车','Alder St 食车广场就在附近']]},
+  {ll:[45.5255,-122.6727],cat:'see',ic:'🏛️',title:'兰苏中式园林',sub:'Old Town · ⚠️ 白天去',gmap:'Lan Su Chinese Garden Portland',addr:'239 NW Everett St, Portland',
+   rows:[['看点','正宗苏式园林,闹中取静'],['提醒','Old Town 入夜治安一般,白天逛']]},
+  {ll:[45.5220,-122.6700],cat:'see',ic:'🎆',title:'Tom McCall 河滨公园 + 7/4 烟花',sub:'威拉米特河畔 · 国庆烟花场地',gmap:'Tom McCall Waterfront Park Portland',addr:'98 SW Naito Pkwy, Portland',
+   rows:[['烟花','7/4 约 22:00 河上空燃放,步行 5–10 分钟'],['节奏','比完赛→补觉→9 点前到河边占位'],['散场','走路回酒店,不用挤地铁']]},
+  {ll:[45.5083,-122.6655],cat:'see',ic:'🔬',title:'OMSI 科学工业博物馆',sub:'东岸 · 有轨电车/橙线',gmap:'OMSI Portland',addr:'1945 SE Water Ave, Portland',
+   rows:[['适合','11/13 岁 · 潜艇 + 天文馆 + 动手实验'],['玩法','室内不晒,可作半天备选']]},
+  {ll:[45.5225,-122.6730],cat:'food',ic:'🥟',title:'市中心中餐三件套',sub:'红线/电车 · 步行可达 · 赛日就近吃',xhs:'TANAKA 鸡排鸡蛋三明治冷了也好吃,队伍很长;Nong\'s 猪脚饭很香有人连吃两天',gmap:'Xin Ding Dumpling House Portland',addr:'71 SW 2nd Ave, Portland(鑫鼎軒)',links:[{t:'miriam·鑫鼎軒探店',k:'miriam'},{t:'卡门·波特兰吃饭指南',k:'kamen'},{t:"Lumos·美食合集(Nong's猪脚饭)",k:'lumos'}],
+   rows:[['鑫鼎軒','饺子/家常中餐;对面鲜芋仙甜品'],["Nong's",'泰式猪脚饭/海南鸡饭'],['TANAKA','日式炸鸡排三明治,小红书爆款']]},
+  {ll:[45.5305,-122.6560],cat:'food',ic:'🍱',title:'Lloyd 会场旁',sub:'红线 · 赛后应急',gmap:'Lloyd Center Portland',addr:'2201 Lloyd Center, Portland',
+   rows:[['有什么','泰餐 / ramen / pho / 购物中心快餐'],['建议','正餐建议回市中心或去西区']]},
+  {ll:[45.4950,-122.5790],cat:'food',ic:'🍲',title:'Jade District 82nd 中餐大本营',sub:'绿线方向 + 短驳 · 非赛日专程',xhs:'Super King 海鲜自助:生蚝蟹腿随便拿,$20+ 很划算,还有猪蹄烧卖',gmap:'HK Cafe Portland dim sum 82nd',addr:'4410 SE 82nd Ave, Portland(HK Cafe)',links:[{t:'Jennifer·生蚝自助 Super King',k:'jennifer'},{t:'兔姐·寿司自助',k:'tujie'}],
+   rows:[['HK Cafe','现存最大港式早茶,推车点心(4410 SE 82nd);烧卖/咸水角/菠萝包'],['Excellent Cuisine','另一家推车早茶,可对比'],['Super King','海鲜自助 $20+,生蚝蟹腿(5015 SE 82nd)'],['99 Ranch','大华亚超,囤水果酸奶给孩子赛日早餐'],['⚠️ 已停业','Ocean City、Wong\'s King 已永久关闭,早茶改去 HK Cafe']]},
+  {ll:[45.4860,-122.8030],cat:'food',ic:'🔥',title:'Beaverton 西区 · 火锅+亚超',sub:'红线西端终点(和你们酒店同线)',xhs:'重庆老火锅周末爆满,建议平时去或一开门就冲;鹿鼎记川菜分量超大',gmap:'Uwajimaya Beaverton',addr:'Beaverton, Oregon(红线西端)',links:[{t:'Fay姐·十七门重庆老火锅',k:'fay'},{t:'花开半暮·鹿鼎记 Duck House',k:'huakai'}],
+   rows:[['火锅','重庆老火锅 / Happy Lamb,麻辣锅底正'],['鹿鼎记','川味中餐,分量超大'],['Uwajimaya','大型日系亚超']]},
+  {ll:[45.5300,-122.6985],cat:'treat',ic:'🍦',title:'Salt & Straw 冰淇淋',sub:'波特兰冰淇淋之王 · Nob Hill NW 23rd',xhs:'小红书高频打卡;招牌 Honey Lavender、季节限定本地食材口味',gmap:'Salt & Straw NW 23rd Portland',addr:'838 NW 23rd Ave, Portland',links:[{t:'卡门·波特兰吃饭指南(甜点咖啡)',k:'kamen'}],
+   rows:[['评价','全美闻名,创意口味(蜂蜜薰衣草)'],['位置','NW 23rd 旗舰店,Streetcar 可达'],['适合','逛 Nob Hill 顺路,孩子最爱']]},
+  {ll:[45.5220,-122.6735],cat:'treat',ic:'☕',title:'市中心咖啡 · 甜甜圈',sub:'红线/电车 · downtown 步行可达',xhs:'Case Study 茉莉抹茶拿铁被打 10/10;Blue Star 比 Voodoo 好吃',gmap:'Stumptown Coffee Roasters Downtown Portland',addr:'128 SW 3rd Ave, Portland(Stumptown)',links:[{t:'卡门·吃饭指南(Case Study/Stumptown)',k:'kamen'},{t:'蓝亭·游记(Case Study 10/10)',k:'lanting'},{t:'Lumos·美食合集(Less & More)',k:'lumos'}],
+   rows:[['Stumptown','★4.5 波特兰咖啡名片'],['Case Study','茉莉抹茶拿铁(小红书 10/10)'],['Blue Star','高端手工甜甜圈,比 Voodoo 值']]},
+  {ll:[45.5130,-122.6610],cat:'treat',ic:'🫖',title:'Coava Coffee 咖啡',sub:'★4.6 全城最高分 · 东岸',gmap:'Coava Coffee Portland',addr:'1300 SE Grand Ave, Portland',
+   rows:[['评价','本地精品咖啡天花板'],['位置','SE Grand 东岸,可配 OMSI'],['同级','Heart Coffee ★4.5 也值得']]},
+  {ll:[45.5308,-122.6585],cat:'treat',ic:'☕',title:'会场旁 · 便捷咖啡小吃',sub:'⚡ 便捷优先 · 赛日抓了就走',gmap:'Pine State Biscuits Lloyd Portland',addr:'Lloyd District(会场旁),Portland',
+   rows:[['馆内最近','Portland Coffee Roasters(会场内)'],['Pine State Biscuits','biscuit 三明治窗口,赛前补能量'],['Roseline Coffee','Lloyd 区精品咖啡'],['Starbucks @ Lloyd','保底,排队快']]},
+  {ll:[45.5230,-122.6810],cat:'food',ic:'🍣',title:'日料 · Brunch · 西餐(高分)',sub:'市中心一带 · 非赛日正餐',xhs:'卡门:Ryoma 拉面便宜量足、Ox 牛排必点偏咸;小圓:Bellpine 漂亮饭征服味蕾',gmap:'Akizawa Japanese Bistro Portland',addr:'市中心一带,Portland',links:[{t:'卡门·波特兰吃饭指南',k:'kamen'},{t:'小圓·top漂亮饭 Bellpine',k:'yuan'},{t:'0卡momo·Portland攻略(日料)',k:'momo'}],
+   rows:[['Akizawa / Murata','强推日料'],['Ryoma Ramen','拉面便宜量足'],['Daily Feast','早午餐,三文鱼炒蛋'],['Ox / Bellpine','高端西餐"漂亮饭"']]},
+  {ll:[45.5530,-122.6650],cat:'see',ic:'🛍️',title:'免税购物(俄勒冈无销售税)',sub:'西区/郊区 · 中国游客最爱',xhs:'0卡momo:Adidas 员工店不用员工邀请,App 预约即可,全场 5 折款新码全',gmap:'Adidas Employee Store Portland',addr:'5040 NE 9th Ave, Portland(Adidas 员工店)',links:[{t:'0卡momo·便宜好吃好买攻略',k:'momo'}],
+   rows:[['Adidas 员工店','免邀约,App 预约,约 5 折'],['市区免税','Columbia 旗舰 / Nike'],['Woodburn 奥莱','大型 outlet,需租车'],['Washington Square','西区大商场']]}
+];
+
+const CAT={ venue:{h:'h-venue'},hotel:{h:'h-hotel'},food:{h:'h-food'},see:{h:'h-see'},treat:{h:'h-treat'} };
+
+// ---- init map ----
+const map=L.map('map',{zoomControl:true}).setView([45.524,-122.665],12);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+  subdomains:'abcd', maxZoom:19, attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+
+// draw lines
+const lineLayers={};
+Object.entries(LINES).forEach(([key,L0])=>{
+  const grp=L.layerGroup();
+  const opt={color:L0.color,weight:5,opacity:.85,dashArray:L0.dash||null,lineJoin:'round',lineCap:'round'};
+  L.polyline(L0.pts,opt).addTo(grp);
+  if(L0.pts2) L.polyline(L0.pts2,opt).addTo(grp);
+  grp.addTo(map); lineLayers[key]=grp;
+});
+
+// ---- MAX stations (下车点) ----
+const STATIONS=[
+  {ll:[45.4925,-122.8035],n:'Beaverton TC',zh:'火锅·亚超',key:1},
+  {ll:[45.5103,-122.7160],n:'Washington Park',zh:'动物园·花园',key:1},
+  {ll:[45.5205,-122.6815],n:'Galleria/SW 10th',zh:'丽兹·购物',key:1},
+  {ll:[45.5188,-122.6793],n:'Pioneer Square',zh:'市中心核心',key:1},
+  {ll:[45.5188,-122.6779],n:'Morrison/Yamhill',zh:'The Nines',key:1},
+  {ll:[45.5255,-122.6720],n:'Old Town/Chinatown',zh:'兰苏园'},
+  {ll:[45.5290,-122.6665],n:'Rose Quarter TC',zh:''},
+  {ll:[45.5285,-122.6637],n:'Convention Center',zh:'会场★',key:1},
+  {ll:[45.5305,-122.6560],n:'Lloyd Center',zh:'会场旁',key:1},
+  {ll:[45.5335,-122.6215],n:'Hollywood/NE 42nd',zh:''},
+  {ll:[45.5305,-122.5635],n:'Gateway TC',zh:'换车',key:1},
+  {ll:[45.5705,-122.5945],n:'Cascades',zh:'省钱住宿',key:1},
+  {ll:[45.5868,-122.5935],n:'PDX 机场',zh:'落地上车',key:1},
+  {ll:[45.5045,-122.5635],n:'SE Division(I-205)',zh:'近 Jade District',key:1},
+  {ll:[45.5300,-122.6985],n:'NW 23rd(电车)',zh:'Nob Hill'},
+  {ll:[45.5095,-122.6820],n:'PSU(南端)',zh:''}
+];
+const stnLayer=L.layerGroup().addTo(map);
+STATIONS.forEach(s=>{
+  const html='<div class="stn'+(s.key?' key':'')+'"><div class="nd"></div><div class="nm">'+s.n+(s.zh?' <small>'+s.zh+'</small>':'')+'</div></div>';
+  const icon=L.divIcon({html,className:'',iconSize:[10,10],iconAnchor:[5,5]});
+  L.marker(s.ll,{icon,interactive:false,zIndexOffset:-500,keyboard:false}).addTo(stnLayer);
+});
+
+// markers grouped by category
+const catLayers={};
+POIS.forEach(poi=>{
+  const big=poi.cat==='venue';
+  const html='<div class="mk '+(big?'mk-venue':'')+'">'+poi.ic+(poi.xhs?'<span class="bdg">小红</span>':'')+(big?'<span class="vlbl">会场</span>':'')+'</div>';
+  const icon=L.divIcon({html,className:'',iconSize:[big?54:34,big?54:34],iconAnchor:[big?27:17,big?27:17]});
+  const m=L.marker(poi.ll,{icon,title:poi.title});
+  m.on('click',()=> poi.hub?openHub():openModal(poi));
+  if(!catLayers[poi.cat]) catLayers[poi.cat]=L.layerGroup().addTo(map);
+  m.addTo(catLayers[poi.cat]);
+});
+
+// ---- VENUE HUB ----
+const HUB=[
+  {ic:'🚆',tt:'赛日早晨乘车',sh:'倒推时间法,几点上车一目了然',det:{cat:'venue',ic:'🚆',title:'赛日早晨 · 轻轨乘车',sub:'倒推时间法 · 不耽搁上场',rows:[['倒推','检录关闭约 8:00 → 提前 1h 热身=7:00 到馆 → 红线约 10 分+步行+缓冲'],['上车','目标 6:30–6:40 上车(Pioneer/Morrison 站)'],['7/4 假日','轻轨按周日班次跑、更疏,再提前一班'],['前一晚','装备分包(7/3 双娃同天分两包)、买好早餐']]}},
+  {ic:'☕',tt:'会场旁便捷补给',sh:'便捷优先 · 抓了就走',det:{cat:'treat',ic:'☕',title:'会场旁 · 便捷咖啡小吃',sub:'⚡ 便捷优先 · 赛日补给',gmap:'Pine State Biscuits Lloyd Portland',addr:'Lloyd District(会场旁),Portland',rows:[['馆内最近','Portland Coffee Roasters(会场内)'],['Pine State Biscuits','biscuit 三明治窗口,赛前补能量'],['Roseline Coffee','Lloyd 区精品咖啡'],['Starbucks @ Lloyd','保底,排队快']]}},
+  {ic:'📅',tt:'全赛程',sh:'John 3 场 · Claire 2 场 · 空闲 2 天',det:{cat:'venue',ic:'📅',title:'全赛程',sub:'John(Qianzhong)· Claire(Zhishan)',rows:[['6/30 二','John · Cadet 男子重剑'],['7/3 五 ⚠双赛','John Y14 男重 · Claire Y14 女花'],['7/4 六','John Y14 男花 · 晚上看烟花🎆'],['7/5 日','Claire Y12 女花(收官)'],['空闲','7/1 换酒店 · 7/2 完整空闲日']]}},
+  {ic:'🎒',tt:'带装备 & 寄包',sh:'剑包坐轻轨 + 会场寄存',det:{cat:'venue',ic:'🎒',title:'带装备坐车 & 寄包',sub:'轻轨运装备完全可行',rows:[['剑包','全程拉好拉链;选低地板车厢省力'],['寄包','馆内有付费寄包处,赛后去玩不用拖回'],['安全','装备包别过夜留车里'],['到达日','先做掉装备检查,认好检录处+剑道区']]}},
+  {ic:'⏱️',tt:'检录 & 罚则',sh:'错过检录直接除名',det:{cat:'venue',ic:'⏱️',title:'检录提醒 & 罚则',sub:'关系到能不能上场',rows:[['关检录','青少年组通常 8:00 左右关闭检录'],['后果','错过直接除名,还有 $250 弃赛罚款'],['复核','赛前一晚 FencingTime Live 看检录+剑道'],['缓冲','按提前 1h 热身倒推,再加 10–15 分']]}},
+  {ic:'🚇',tt:'场馆交通',sh:'红线一线直达,不换乘',det:{cat:'venue',ic:'🚇',title:'场馆交通',sub:'红线 Convention Center 站',gmap:'Oregon Convention Center Portland',addr:'777 NE Martin Luther King Jr Blvd, Portland',rows:[['到达','机场↔会场红线约 20 分钟,不换乘'],['住宿→会场','市中心酒店红线约 10 分钟'],['刷卡','手机/银行卡 tap,日票封顶']]}},
+  {ic:'🗺️',tt:'场馆内部平面图',sh:'咖啡/检录/剑道区/补给位置(示意)',det:{cat:'venue',ic:'🗺️',title:'会场内部 · 简易平面图',sub:'咖啡·检录·剑道区·补给相对位置',html:
+    '<svg viewBox="0 0 420 300" style="width:100%;height:auto;border:1px solid #e2e7f0;border-radius:12px;background:#fbfcfe;margin-bottom:10px">'+
+    '<rect x="12" y="12" width="396" height="246" rx="10" fill="#f4f7fc" stroke="#c9d3e3" stroke-width="2"/>'+
+    '<text x="26" y="140" transform="rotate(-90 26 140)" font-size="11.5" fill="#e23744" font-weight="bold" text-anchor="middle">🚉 红线站 · 主入口</text>'+
+    '<rect x="44" y="24" width="118" height="222" rx="8" fill="#eef3fb" stroke="#d3deef"/>'+
+    '<text x="103" y="42" font-size="12" fill="#3a4757" font-weight="bold" text-anchor="middle">大堂 Lobby</text>'+
+    '<text x="103" y="72" font-size="19" text-anchor="middle">☕</text>'+
+    '<text x="103" y="90" font-size="10" fill="#33404f" text-anchor="middle">Portland Coffee</text>'+
+    '<text x="103" y="102" font-size="10" fill="#33404f" text-anchor="middle">Roasters(馆内)</text>'+
+    '<text x="103" y="140" font-size="17" text-anchor="middle">📋</text>'+
+    '<text x="103" y="157" font-size="10" fill="#33404f" text-anchor="middle">检录 Reg.</text>'+
+    '<text x="103" y="192" font-size="17" text-anchor="middle">🛡️</text>'+
+    '<text x="103" y="209" font-size="10" fill="#33404f" text-anchor="middle">装备检查</text>'+
+    '<text x="103" y="236" font-size="15" text-anchor="middle">🚻</text>'+
+    '<rect x="178" y="24" width="218" height="108" rx="8" fill="#fff4f0" stroke="#f3c6b3"/>'+
+    '<text x="287" y="46" font-size="12" fill="#c4562a" font-weight="bold" text-anchor="middle">Exhibit Hall A</text>'+
+    '<text x="287" y="86" font-size="24" text-anchor="middle">🤺</text>'+
+    '<text x="287" y="110" font-size="10.5" fill="#33404f" text-anchor="middle">剑道区 Strips</text>'+
+    '<rect x="178" y="140" width="150" height="106" rx="8" fill="#fff4f0" stroke="#f3c6b3"/>'+
+    '<text x="253" y="162" font-size="12" fill="#c4562a" font-weight="bold" text-anchor="middle">Exhibit Hall B</text>'+
+    '<text x="253" y="200" font-size="24" text-anchor="middle">🤺</text>'+
+    '<text x="253" y="222" font-size="10.5" fill="#33404f" text-anchor="middle">剑道区 Strips</text>'+
+    '<rect x="338" y="140" width="58" height="106" rx="8" fill="#eef9f1" stroke="#bfe6cc"/>'+
+    '<text x="367" y="186" font-size="17" text-anchor="middle">🍽️</text>'+
+    '<text x="367" y="205" font-size="9.5" fill="#33404f" text-anchor="middle">Stir</text>'+
+    '<text x="367" y="217" font-size="9.5" fill="#33404f" text-anchor="middle">Bistro</text>'+
+    '<text x="367" y="236" font-size="14" text-anchor="middle">📦</text>'+
+    '</svg>'+
+    '<div style="font-size:11.5px;color:#9a2230;background:#fff5f6;border:1px solid #ffd9de;border-radius:10px;padding:9px 11px;margin-bottom:6px">⚠️ 简易示意(非精确平面)。<b>Starbucks / Pine State / Roseline 在馆外 Lloyd 方向</b>步行几分钟;精确剑道分配与检录台位置看 USA Fencing 赛前一周赛事手册。</div>',
+    rows:[['☕ 馆内','Portland Coffee Roasters 在主大堂,赛日不用出馆'],['☕ 馆外','Starbucks / Pine State / Roseline → Lloyd 方向'],['📦 寄包','馆内付费寄包处,赛后去玩不用拖装备']]}}
+];
+const hubGrid=document.getElementById('hubgrid');
+HUB.forEach(h=>{ const t=document.createElement('div'); t.className='tile';
+  t.innerHTML='<div class="tic">'+h.ic+'</div><div class="tt">'+h.tt+'</div><div class="sh">'+h.sh+'</div><div class="more">点击放大 🔍</div>';
+  t.addEventListener('click',()=>openModal(h.det)); hubGrid.appendChild(t); });
+const hubov=document.getElementById('hubov');
+function openHub(){ hubov.classList.add('on'); }
+function closeHub(){ hubov.classList.remove('on'); }
+document.getElementById('hubClose').addEventListener('click',closeHub);
+hubov.addEventListener('click',e=>{ if(e.target===hubov) closeHub(); });
+
+// ---- MODAL ----
+const ov=document.getElementById('ov');
+function openModal(poi){
+  const c=CAT[poi.cat]||{h:'h-see'};
+  document.getElementById('mhead').className='mhead '+c.h;
+  document.getElementById('mIc').textContent=poi.ic;
+  document.getElementById('mTitle').textContent=poi.title;
+  document.getElementById('mSub').textContent=poi.sub||'';
+  let html='';
+  if(poi.gmap){ const q=encodeURIComponent(poi.gmap);
+    html+='<a class="gmap" href="https://www.google.com/maps/search/?api=1&query='+q+'" target="_blank" rel="noopener"><span class="pin">📍</span><span class="ga"><b>'+(poi.addr||poi.gmap)+'</b><span class="gs">点地址 → Google 地图(看评分·导航)</span></span><span class="ar">↗</span></a>'; }
+  if(poi.html){ html+=poi.html; }
+  (poi.rows||[]).forEach(r=>{ html+='<div class="r"><span class="k">'+r[0]+'</span><div>'+r[1]+'</div></div>'; });
+  if(poi.xhs){ html+='<div class="xhsq"><div class="t">📕 小红书实测</div>'+poi.xhs+'</div>'; }
+  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书相关帖子(点开看实拍)</div>';
+    poi.links.forEach(l=>{ const u=XHS[l.k]||l.k; html+='<a href="'+u+'" target="_blank" rel="noopener">📕 '+l.t+'<span class="ar">↗</span></a>'; }); html+='</div>'; }
+  document.getElementById('mBody').innerHTML=html;
+  ov.classList.add('on');
+}
+function closeModal(){ ov.classList.remove('on'); }
+document.getElementById('closeBtn').addEventListener('click',closeModal);
+ov.addEventListener('click',e=>{ if(e.target===ov) closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(ov.classList.contains('on')) closeModal(); else closeHub(); } });
+
+// ---- legend toggles ----
+document.querySelectorAll('.lg[data-line]').forEach(lg=>{ lg.addEventListener('click',()=>{
+  lg.classList.toggle('off'); const k=lg.dataset.line; const off=lg.classList.contains('off');
+  if(off) map.removeLayer(lineLayers[k]); else lineLayers[k].addTo(map); }); });
+document.querySelectorAll('.lg[data-cat]').forEach(lg=>{ lg.addEventListener('click',()=>{
+  lg.classList.toggle('off'); const k=lg.dataset.cat; const off=lg.classList.contains('off');
+  if(catLayers[k]){ if(off) map.removeLayer(catLayers[k]); else catLayers[k].addTo(map); } }); });
+document.querySelector('.lg[data-stn]').addEventListener('click',function(){
+  this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(stnLayer); else stnLayer.addTo(map); });
+</script>
+</body>
+</html>
