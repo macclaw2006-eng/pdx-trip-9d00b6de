@@ -258,36 +258,12 @@ const HUB=[
   {ic:'🎒',tt:'带装备 & 寄包',sh:'剑包坐轻轨 + 会场寄存',det:{cat:'venue',ic:'🎒',title:'带装备坐车 & 寄包',sub:'轻轨运装备完全可行',rows:[['剑包','全程拉好拉链;选低地板车厢省力'],['寄包','馆内有付费寄包处,赛后去玩不用拖回'],['安全','装备包别过夜留车里'],['到达日','先做掉装备检查,认好检录处+剑道区']]}},
   {ic:'⏱️',tt:'检录 & 罚则',sh:'错过检录直接除名',det:{cat:'venue',ic:'⏱️',title:'检录提醒 & 罚则',sub:'关系到能不能上场',rows:[['关检录','青少年组通常 8:00 左右关闭检录'],['后果','错过直接除名,还有 $250 弃赛罚款'],['复核','赛前一晚 FencingTime Live 看检录+剑道'],['缓冲','按提前 1h 热身倒推,再加 10–15 分']]}},
   {ic:'🚇',tt:'场馆交通',sh:'红线一线直达,不换乘',det:{cat:'venue',ic:'🚇',title:'场馆交通',sub:'红线 Convention Center 站',gmap:'Oregon Convention Center Portland',addr:'777 NE Martin Luther King Jr Blvd, Portland',rows:[['到达','机场↔会场红线约 20 分钟,不换乘'],['住宿→会场','市中心酒店红线约 10 分钟'],['刷卡','手机/银行卡 tap,日票封顶']]}},
-  {ic:'🗺️',tt:'场馆内部平面图',sh:'咖啡/检录/剑道区/补给位置(示意)',det:{cat:'venue',ic:'🗺️',title:'会场内部 · 简易平面图',sub:'咖啡·检录·剑道区·补给相对位置',html:
-    '<svg viewBox="0 0 420 300" style="width:100%;height:auto;border:1px solid #e2e7f0;border-radius:12px;background:#fbfcfe;margin-bottom:10px">'+
-    '<rect x="12" y="12" width="396" height="246" rx="10" fill="#f4f7fc" stroke="#c9d3e3" stroke-width="2"/>'+
-    '<text x="26" y="140" transform="rotate(-90 26 140)" font-size="11.5" fill="#e23744" font-weight="bold" text-anchor="middle">🚉 红线站 · 主入口</text>'+
-    '<rect x="44" y="24" width="118" height="222" rx="8" fill="#eef3fb" stroke="#d3deef"/>'+
-    '<text x="103" y="42" font-size="12" fill="#3a4757" font-weight="bold" text-anchor="middle">大堂 Lobby</text>'+
-    '<text x="103" y="72" font-size="19" text-anchor="middle">☕</text>'+
-    '<text x="103" y="90" font-size="10" fill="#33404f" text-anchor="middle">Portland Coffee</text>'+
-    '<text x="103" y="102" font-size="10" fill="#33404f" text-anchor="middle">Roasters(馆内)</text>'+
-    '<text x="103" y="140" font-size="17" text-anchor="middle">📋</text>'+
-    '<text x="103" y="157" font-size="10" fill="#33404f" text-anchor="middle">检录 Reg.</text>'+
-    '<text x="103" y="192" font-size="17" text-anchor="middle">🛡️</text>'+
-    '<text x="103" y="209" font-size="10" fill="#33404f" text-anchor="middle">装备检查</text>'+
-    '<text x="103" y="236" font-size="15" text-anchor="middle">🚻</text>'+
-    '<rect x="178" y="24" width="218" height="108" rx="8" fill="#fff4f0" stroke="#f3c6b3"/>'+
-    '<text x="287" y="46" font-size="12" fill="#c4562a" font-weight="bold" text-anchor="middle">Exhibit Hall A</text>'+
-    '<text x="287" y="86" font-size="24" text-anchor="middle">🤺</text>'+
-    '<text x="287" y="110" font-size="10.5" fill="#33404f" text-anchor="middle">剑道区 Strips</text>'+
-    '<rect x="178" y="140" width="150" height="106" rx="8" fill="#fff4f0" stroke="#f3c6b3"/>'+
-    '<text x="253" y="162" font-size="12" fill="#c4562a" font-weight="bold" text-anchor="middle">Exhibit Hall B</text>'+
-    '<text x="253" y="200" font-size="24" text-anchor="middle">🤺</text>'+
-    '<text x="253" y="222" font-size="10.5" fill="#33404f" text-anchor="middle">剑道区 Strips</text>'+
-    '<rect x="338" y="140" width="58" height="106" rx="8" fill="#eef9f1" stroke="#bfe6cc"/>'+
-    '<text x="367" y="186" font-size="17" text-anchor="middle">🍽️</text>'+
-    '<text x="367" y="205" font-size="9.5" fill="#33404f" text-anchor="middle">Stir</text>'+
-    '<text x="367" y="217" font-size="9.5" fill="#33404f" text-anchor="middle">Bistro</text>'+
-    '<text x="367" y="236" font-size="14" text-anchor="middle">📦</text>'+
-    '</svg>'+
-    '<div style="font-size:11.5px;color:#9a2230;background:#fff5f6;border:1px solid #ffd9de;border-radius:10px;padding:9px 11px;margin-bottom:6px">⚠️ 简易示意(非精确平面)。<b>Starbucks / Pine State / Roseline 在馆外 Lloyd 方向</b>步行几分钟;精确剑道分配与检录台位置看 USA Fencing 赛前一周赛事手册。</div>',
-    rows:[['☕ 馆内','Portland Coffee Roasters 在主大堂,赛日不用出馆'],['☕ 馆外','Starbucks / Pine State / Roseline → Lloyd 方向'],['📦 寄包','馆内付费寄包处,赛后去玩不用拖装备']]}}
+  {ic:'🗺️',tt:'场馆平面图(官方)',sh:'官方 Level-1 建筑图 + 关键位置',det:{cat:'venue',ic:'🗺️',title:'会场平面图 · 官方 Level 1',sub:'剑道区=展厅 · MAX 站在东侧 Holladay',html:
+    '<a href="occ-level1.png" target="_blank" rel="noopener"><img src="occ-level1.png" alt="OCC Level 1 平面图" style="width:100%;border:1px solid #e2e7f0;border-radius:12px;margin-bottom:8px"/></a>'+
+    '<div style="font-size:11.5px;color:#46546e;background:#f5f8ff;border:1px solid #e3ebfb;border-radius:10px;padding:9px 11px;margin-bottom:10px">👆 点图放大。<b>剑道区</b>在 Exhibit Halls(A–E,Level 1);<b>MAX 红线站</b>在东侧 NE Holladay St(玻璃尖塔旁);南面 NE MLK 大道有 Ginkoberry 入口与 MLK Lobby;东边隔街即 Hyatt Regency。</div>'+
+    '<a class="gmap" style="background:#eef3fb;border-color:#cdddf5;margin-bottom:8px" href="https://www.oregoncc.org/en/attend/maps" target="_blank" rel="noopener"><span class="pin">🗺️</span><span class="ga"><b style="color:#2546a8">官方互动地图(洗手间/电梯/ATM)</b><span class="gs" style="color:#5577c0">oregoncc.org/attend/maps</span></span><span class="ar" style="color:#2546a8">↗</span></a>'+
+    '<a class="gmap" style="background:#fff5f6;border-color:#ffd9de" href="https://www.oregoncc.org/sites/default/files/2025-09/occ_venueguide.pdf" target="_blank" rel="noopener"><span class="pin">📄</span><span class="ga"><b style="color:#9a2230">官方场馆指南 PDF(全平面图)</b><span class="gs" style="color:#b96570">Level 1 / Lobby / Level 2</span></span><span class="ar" style="color:#9a2230">↗</span></a>',
+    rows:[['🤺 剑道区','比赛在 Exhibit Halls(全国赛通常用 A–E 整层,约 25 万 sq ft)'],['☕ 馆内咖啡','Portland Coffee Roasters 在 Pre-Function 大堂 / Ginkoberry 走廊'],['🚉 到达','MAX Convention Center 站(东侧 Holladay),从 Holladay Lobby 进馆'],['⚠️ 精确分区','剑道编号/检录台具体位置看 USA Fencing 赛前赛事手册']]}}
 ];
 const hubGrid=document.getElementById('hubgrid');
 HUB.forEach(h=>{ const t=document.createElement('div'); t.className='tile';
