@@ -110,6 +110,32 @@
     .hubgrid{ gap:10px; padding:14px 16px 20px; }
   }
 
+  /* ===== 手机优先 · 全屏 App 外壳 ===== */
+  html,body{ height:100%; }
+  body{ overflow:hidden; }
+  .wrap{ max-width:none; height:100%; }
+  header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:env(safe-area-inset-top) 0 0; pointer-events:none; }
+  header h1{ display:inline-block; margin:8px 0 0 10px; font-size:14px; background:rgba(255,255,255,.95);
+       padding:6px 12px; border-radius:20px; box-shadow:0 2px 8px rgba(20,40,80,.16); pointer-events:auto; }
+  header .hint{ display:none; }
+  .legend{ position:fixed; top:calc(env(safe-area-inset-top) + 47px); left:0; right:0; z-index:900; margin:0;
+       padding:0 10px; display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+       scrollbar-width:none; pointer-events:none; }
+  .legend::-webkit-scrollbar{ display:none; }
+  .legend .lg{ flex:0 0 auto; pointer-events:auto; background:rgba(255,255,255,.96); box-shadow:0 2px 6px rgba(20,40,80,.16); }
+  .mapbox{ position:fixed; inset:0; margin:0; border:none; border-radius:0; background:#f7f9fc;
+       overflow-x:auto; overflow-y:hidden; display:flex; align-items:center; -webkit-overflow-scrolling:touch; z-index:1; }
+  .mapinner{ width:1180px; flex:0 0 auto; }
+  .foot{ display:none; }
+  .swipehint{ display:block; position:fixed; left:0; right:0; bottom:calc(env(safe-area-inset-bottom) + 8px); z-index:850;
+       text-align:center; font-size:11px; color:#5b6b8c; pointer-events:none; margin:0; }
+  .ov,.hubov{ background:rgba(15,22,38,.16); align-items:flex-end; padding:0; backdrop-filter:none; }
+  .modal,.hub{ max-width:600px; margin:0 auto; width:100%; border-radius:22px 22px 0 0; max-height:64vh;
+       transform:translateY(101%); opacity:1; transition:transform .27s cubic-bezier(.32,.72,0,1); box-shadow:0 -10px 30px rgba(0,0,0,.24); }
+  .ov.on .modal,.hubov.on .hub{ transform:translateY(0); }
+  .hub{ max-height:80vh; }
+  .sheethandle{ width:42px; height:5px; background:#d3d8e2; border-radius:3px; margin:8px auto 2px; flex:0 0 auto; }
+
   /* venue hub (drill-down) */
   .hubov{ position:fixed; inset:0; background:rgba(15,22,38,.55); backdrop-filter:blur(2px); display:none;
        align-items:center; justify-content:center; z-index:45; padding:18px; }
@@ -182,6 +208,7 @@
 <!-- venue hub (drill-down level 1) -->
 <div class="hubov" id="hubov">
   <div class="hub">
+    <div class="sheethandle"></div>
     <div class="hubhead h-venue">
       <button class="x" id="hubClose">✕</button>
       <div class="ic">🏟️</div>
@@ -196,6 +223,7 @@
 <!-- modal -->
 <div class="ov" id="ov">
   <div class="modal" id="modal">
+    <div class="sheethandle"></div>
     <div class="mhead" id="mhead">
       <button class="x" id="closeBtn">✕</button>
       <div class="ic" id="mIc">📍</div>
