@@ -100,6 +100,33 @@
     .hubov{ padding:0; align-items:flex-end; }
     .hubgrid{ gap:10px; padding:14px 16px 20px; }
   }
+  /* ===== 手机优先 · 全屏地图 App 外壳 ===== */
+  html,body{ height:100%; }
+  body{ overflow:hidden; }
+  header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:env(safe-area-inset-top) 0 0; pointer-events:none; }
+  header h1{ display:inline-block; margin:8px 0 0 10px; font-size:14px; background:rgba(255,255,255,.95);
+       padding:6px 12px; border-radius:20px; box-shadow:0 2px 8px rgba(20,40,80,.16); pointer-events:auto; }
+  header .hint{ display:none; }
+  .bar{ position:fixed; top:calc(env(safe-area-inset-top) + 47px); left:0; right:0; z-index:900; margin:0;
+       padding:0 10px; display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+       scrollbar-width:none; pointer-events:none; background:none; border:none; }
+  .bar::-webkit-scrollbar{ display:none; }
+  .bar .seg{ display:none; }
+  .bar .lg{ flex:0 0 auto; pointer-events:auto; background:rgba(255,255,255,.96); box-shadow:0 2px 6px rgba(20,40,80,.16); border:none; }
+  #map{ position:fixed; inset:0; height:auto; z-index:1; }
+  /* bottom sheets */
+  .ov,.hubov{ background:rgba(15,22,38,.16); align-items:flex-end; padding:0; backdrop-filter:none; }
+  .modal,.hub{ max-width:600px; margin:0 auto; width:100%; border-radius:22px 22px 0 0; max-height:64vh;
+       transform:translateY(101%); opacity:1; transition:transform .27s cubic-bezier(.32,.72,0,1); box-shadow:0 -10px 30px rgba(0,0,0,.24); }
+  .ov.on .modal,.hubov.on .hub{ transform:translateY(0); }
+  .hub{ max-height:80vh; }
+  .sheethandle{ width:42px; height:5px; background:#d3d8e2; border-radius:3px; margin:8px auto 2px; flex:0 0 auto; }
+  /* locate FAB */
+  .fab{ position:fixed; right:14px; bottom:calc(env(safe-area-inset-bottom) + 20px); z-index:850; width:48px; height:48px;
+       border-radius:50%; background:#fff; border:none; box-shadow:0 4px 14px rgba(20,40,80,.3); font-size:22px; cursor:pointer;
+       display:flex; align-items:center; justify-content:center; }
+  .fab:active{ transform:scale(.93); }
+  .mepin{ width:16px; height:16px; border-radius:50%; background:#2a7fff; border:3px solid #fff; box-shadow:0 0 0 2px rgba(42,127,255,.45); }
 </style>
 </head>
 <body>
@@ -127,9 +154,11 @@
   </div>
 
   <div id="map"></div>
+  <button class="fab" id="locateBtn" title="定位我的位置">📍</button>
 
 <!-- hub -->
 <div class="hubov" id="hubov"><div class="hub">
+  <div class="sheethandle"></div>
   <div class="hubhead h-venue"><button class="x" id="hubClose">✕</button><div class="ic">🏟️</div>
     <h2>会场配套中心 · Oregon Convention Center</h2>
     <div class="sub">777 NE MLK Blvd · 红线 Convention Center 站下车即是 · 点下方任意方块再放大 🔍</div></div>
@@ -139,6 +168,7 @@
 
 <!-- modal -->
 <div class="ov" id="ov"><div class="modal">
+  <div class="sheethandle"></div>
   <div class="mhead" id="mhead"><button class="x" id="closeBtn">✕</button><div class="ic" id="mIc">📍</div>
     <h2 id="mTitle"></h2><div class="sub" id="mSub"></div></div>
   <div class="mbody" id="mBody"></div>
@@ -277,7 +307,7 @@ POIS.forEach(poi=>{
   const html='<div class="'+cls+'">'+poi.ic+(poi.xhs?'<span class="bdg">小红</span>':'')+(big?'<span class="vlbl">会场</span>':'')+(prom?'<span class="hlbl">'+poi.plbl+'</span>':'')+'</div>';
   const icon=L.divIcon({html,className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
   const m=L.marker(poi.ll,{icon,title:poi.title,zIndexOffset:prom?400:0});
-  m.on('click',()=> poi.hub?openHub():openModal(poi));
+  m.on('click',()=>{ focusOn(poi.ll); poi.hub?openHub():openModal(poi); });
   if(!catLayers[poi.cat]) catLayers[poi.cat]=L.layerGroup().addTo(map);
   m.addTo(catLayers[poi.cat]);
 });
@@ -330,6 +360,23 @@ function closeModal(){ ov.classList.remove('on'); }
 document.getElementById('closeBtn').addEventListener('click',closeModal);
 ov.addEventListener('click',e=>{ if(e.target===ov) closeModal(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(ov.classList.contains('on')) closeModal(); else closeHub(); } });
+
+// ---- focus marker above the bottom sheet ----
+function focusOn(ll){
+  const z=Math.max(map.getZoom(),14);
+  map.setView(ll,z,{animate:true});
+  setTimeout(()=>{ map.panBy([0, Math.round(map.getSize().y*0.26)],{animate:true}); },80);
+}
+// ---- geolocation: 你在这里 ----
+let meMarker=null;
+const locateBtn=document.getElementById('locateBtn');
+locateBtn.addEventListener('click',()=>{ locateBtn.textContent='⏳'; map.locate({setView:true,maxZoom:16,enableHighAccuracy:true}); });
+map.on('locationfound',e=>{
+  locateBtn.textContent='📍';
+  if(meMarker) meMarker.setLatLng(e.latlng);
+  else meMarker=L.marker(e.latlng,{icon:L.divIcon({html:'<div class="mepin"></div>',className:'',iconSize:[16,16],iconAnchor:[8,8]}),interactive:false,zIndexOffset:1500}).addTo(map);
+});
+map.on('locationerror',()=>{ locateBtn.textContent='📍'; alert('定位失败:请在浏览器/系统里允许本页访问定位。'); });
 
 // ---- legend toggles ----
 document.querySelectorAll('.lg[data-line]').forEach(lg=>{ lg.addEventListener('click',()=>{
