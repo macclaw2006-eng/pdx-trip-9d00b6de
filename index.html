@@ -28,14 +28,13 @@
   .pin svg{ display:block; filter:drop-shadow(0 3px 5px rgba(20,40,80,.28)); transition:transform .12s ease; }
   .pin:hover svg{ transform:scale(1.08); }
   .pin .reddot{ position:absolute; top:-1px; right:-1px; width:11px; height:11px; border-radius:50%; background:#ff2442; border:2px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,.25); }
-  .pin .pinlbl{ position:absolute; top:-15px; left:50%; transform:translateX(-50%); background:#2f6bd8; color:#fff;
-       font-size:10px; font-weight:800; padding:1px 7px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 5px rgba(20,40,80,.25); }
-  .pin .pinlbl.pl-venue{ background:#e23744; }
+  .pin .pinlbl{ position:absolute; top:-14px; left:50%; transform:translateX(-50%); color:#fff;
+       font-size:9.5px; font-weight:700; letter-spacing:.2px; padding:1px 7px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 5px rgba(20,40,80,.22); }
   /* station marker */
   .stn{ display:flex; align-items:center; gap:4px; }
   .stn .nd{ width:11px; height:11px; border-radius:50%; background:#fff; border:3px solid #555; box-shadow:0 1px 3px rgba(0,0,0,.35); flex:0 0 auto; }
   .stn .nm{ background:rgba(255,255,255,.93); border:1px solid #d8dee8; border-radius:5px; padding:1px 5px; font-size:10px; font-weight:700; color:#3a4757; white-space:nowrap; box-shadow:0 1px 2px rgba(0,0,0,.12); }
-  .stn .nm small{ color:#e23744; font-weight:700; }
+  .stn .nm small{ color:#8a93a8; font-weight:600; }
   .stn.key .nd{ width:13px; height:13px; border-color:#e23744; }
   .stn.key .nm{ border-color:#f3b8bd; color:#1c2433; }
 
@@ -305,7 +304,7 @@ STATIONS.forEach(s=>{
 });
 
 // ---- custom teardrop pins (professional map-app style) ----
-const CATCOLOR={ venue:'#e23744', hotel:'#2f6bd8', food:'#ef6c2a', see:'#1a9e63', treat:'#cf3f93' };
+const CATCOLOR={ venue:'#a83c4a', hotel:'#42607d', food:'#bd7a3c', see:'#4e8a72', treat:'#8f6a8e' };
 const GLYPH={
   hotel:'M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7 4 8.34 4 10s1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z',
   food:'M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z',
@@ -314,18 +313,16 @@ const GLYPH={
   venue:'M12 2L4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z'
 };
 function pinIcon(poi){
-  const col=CATCOLOR[poi.cat]||'#666';
+  const col=CATCOLOR[poi.cat]||'#3a3f4a';
   const big=poi.cat==='venue', prom=poi.prom;
-  const w=big?50:(prom?42:34), h=Math.round(w*1.32);
+  const w=big?46:(prom?40:32), h=Math.round(w*1.34);
   const g=GLYPH[poi.cat]||'';
   const svg='<svg width="'+w+'" height="'+h+'" viewBox="0 0 24 31.7">'
-    +'<path d="M12 0C6.2 0 1.5 4.7 1.5 10.5 1.5 18 12 31.5 12 31.5S22.5 18 22.5 10.5C22.5 4.7 17.8 0 12 0z" fill="'+col+'" stroke="#fff" stroke-width="1.6"/>'
-    +'<circle cx="12" cy="10.5" r="6.4" fill="#fff"/>'
-    +'<g transform="translate(6.2,4.7) scale(0.48)" fill="'+col+'">'+g+'</g></svg>';
-  const lbl=(big?'<div class="pinlbl pl-venue">会场</div>':(prom?'<div class="pinlbl">'+poi.plbl+'</div>':''));
+    +'<path d="M12 0C6.2 0 1.5 4.7 1.5 10.5 1.5 18 12 31.5 12 31.5S22.5 18 22.5 10.5C22.5 4.7 17.8 0 12 0z" fill="'+col+'" stroke="#fff" stroke-width="1.5"/>'
+    +'<g transform="translate(6.2,4.6) scale(0.49)" fill="#fff">'+g+'</g></svg>';
+  const lbl=(big||prom)?'<div class="pinlbl" style="background:'+col+'">'+(big?'会场':poi.plbl)+'</div>':'';
   const dot=poi.xhs?'<i class="reddot"></i>':'';
-  return L.divIcon({html:'<div class="pin'+(big?' pin-venue':'')+(prom?' pin-prom':'')+'">'+svg+lbl+dot+'</div>',
-    className:'pinroot', iconSize:[w,h], iconAnchor:[w/2,h], popupAnchor:[0,-h]});
+  return L.divIcon({html:'<div class="pin">'+svg+lbl+dot+'</div>',className:'pinroot', iconSize:[w,h], iconAnchor:[w/2,h], popupAnchor:[0,-h]});
 }
 const catLayers={};
 const markerById={};
