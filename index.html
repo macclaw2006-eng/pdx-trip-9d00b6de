@@ -638,8 +638,8 @@ function openModal(poi){
   if(poi.html){ html+=poi.html; }
   (poi.rows||[]).forEach(r=>{ html+='<div class="r"><span class="k">'+keyText(r[0])+'</span><div>'+r[1]+'</div></div>'; });
   if(poi.xhs){ html+='<div class="xhsq"><div class="t">📕 小红书实测</div>'+poi.xhs+'</div>'; }
-  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书攻略 · 点开在 rednote 搜索(已自动复制搜索词备用,可粘进 App)</div>';
-    poi.links.forEach(l=>{ const kw=(XHS[l.k]||l.k); const u='https://www.rednote.com/search_result?keyword='+encodeURIComponent(kw); html+='<a href="'+u+'" target="_blank" rel="noopener" onclick="copyKw(null,&quot;'+kw+'&quot;)">📕 '+l.t+'<span class="ar">↗</span></a>'; }); html+='</div>'; }
+  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书攻略 · 点一下复制搜索词 → 打开 rednote / 小红书 App 粘贴搜索即可看</div>';
+    poi.links.forEach(l=>{ const kw=(XHS[l.k]||l.k); html+='<a href="#" onclick="return copyKw(event,&quot;'+kw+'&quot;)">📕 '+l.t+'<span class="ar">⧉ 复制搜索词</span></a>'; }); html+='</div>'; }
   document.getElementById('mBody').innerHTML=deEmoji(html);
   ov.classList.add('on');
 }
@@ -683,9 +683,9 @@ document.querySelector('.lg[data-walk]').addEventListener('click',function(){
   this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(walkLayer); else walkLayer.addTo(map); });
 
 function showToast(msg){ var t=document.getElementById('xhstoast'); if(!t){ t=document.createElement('div'); t.id='xhstoast'; document.body.appendChild(t);} t.textContent=msg; t.className='on'; clearTimeout(window.__tt); window.__tt=setTimeout(function(){t.className='';},2600); }
-function fallback(kw){ var ta=document.createElement('textarea'); ta.value=kw; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy'); showToast('已复制「'+kw+'」 · 打开小红书 App 粘贴搜索');}catch(_){ showToast('搜索词:'+kw); } document.body.removeChild(ta); }
+function fallback(kw){ var ta=document.createElement('textarea'); ta.value=kw; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy'); showToast('已复制「'+kw+'」 · 打开 rednote / 小红书 App 粘贴搜索');}catch(_){ showToast('搜索词:'+kw); } document.body.removeChild(ta); }
 function copyKw(e, kw){ if(e&&e.preventDefault)e.preventDefault();
-  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(kw).then(function(){ showToast('已复制「'+kw+'」 · 打开小红书 App 粘贴搜索'); }, function(){ fallback(kw); }); } else { fallback(kw); }
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(kw).then(function(){ showToast('已复制「'+kw+'」 · 打开 rednote / 小红书 App 粘贴搜索'); }, function(){ fallback(kw); }); } else { fallback(kw); }
   return false; }
 
 </script>
