@@ -24,6 +24,8 @@
   .mapbox{ position:relative; margin:0 12px 16px; background:#f7f9fc; border:1px solid #e2e7f0; border-radius:18px; overflow:hidden; }
   svg.lines{ display:block; width:100%; height:auto; }
   .stations, .pois{ position:absolute; inset:0; }
+  .mapinner{ position:relative; width:100%; }
+  .swipehint{ display:none; }
   .st{ position:absolute; transform:translate(-50%,-50%); }
   .st .d{ width:13px; height:13px; border-radius:50%; background:#fff; border:3px solid #e23744; box-shadow:0 1px 3px rgba(0,0,0,.15); }
   .st .lbl{ position:absolute; left:50%; transform:translateX(-50%); top:15px; white-space:nowrap; font-size:10.5px; font-weight:700; color:#56627d; }
@@ -89,6 +91,25 @@
   .h-air{ background:linear-gradient(135deg,#6a7794,#4a566f); }
   .h-treat{ background:linear-gradient(135deg,#e8569e,#c43178); }
 
+  /* ---- 手机竖屏优化 ---- */
+  @media (max-width:760px){
+    header{ padding:9px 13px 5px; }
+    h1{ font-size:16px; }
+    .hint{ font-size:10.5px; }
+    .legend{ flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:7px 12px 8px; }
+    .legend::-webkit-scrollbar{ display:none; }
+    .legend .lg{ flex:0 0 auto; }
+    .mapbox{ overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; }
+    .mapinner{ width:1000px; }
+    .swipehint{ display:block; text-align:center; font-size:11px; color:#8a96ad; margin:2px 12px 12px; }
+    .modal{ max-width:none; border-radius:18px 18px 0 0; }
+    .ov{ padding:0; align-items:flex-end; }
+    .mhead h2{ font-size:18px; } .mbody{ padding:15px 18px 24px; }
+    .hub{ border-radius:18px 18px 0 0; max-height:92vh; }
+    .hubov{ padding:0; align-items:flex-end; }
+    .hubgrid{ gap:10px; padding:14px 16px 20px; }
+  }
+
   /* venue hub (drill-down) */
   .hubov{ position:fixed; inset:0; background:rgba(15,22,38,.55); backdrop-filter:blur(2px); display:none;
        align-items:center; justify-content:center; z-index:45; padding:18px; }
@@ -132,6 +153,7 @@
   </div>
 
   <div class="mapbox">
+   <div class="mapinner">
     <svg class="lines" viewBox="0 0 1280 740" preserveAspectRatio="xMidYMid meet">
       <!-- river -->
       <rect x="612" y="0" width="44" height="740" fill="#d6e8f5" opacity="0.8"/>
@@ -150,7 +172,9 @@
     <div class="stations" id="stations"></div>
     <!-- pois -->
     <div class="pois" id="pois"></div>
+   </div>
   </div>
+  <div class="swipehint">← 左右滑动看完整线路 →</div>
 
   <div class="foot">数据:小红书中国游客实测 + Travel Portland / Portland Monthly · 行程 6/29–7/6 · 价格店况以到店为准</div>
 </div>
