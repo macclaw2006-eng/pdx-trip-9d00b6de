@@ -29,6 +29,8 @@
   .mk-venue{ width:54px; height:54px; font-size:30px; border:3px solid #e23744;
        box-shadow:0 0 0 5px rgba(226,55,68,.22),0 4px 12px rgba(20,40,80,.3); }
   .mk-venue .vlbl{ position:absolute; bottom:-17px; left:50%; transform:translateX(-50%); background:#e23744; color:#fff; font-size:10px; font-weight:800; padding:0 8px; border-radius:20px; white-space:nowrap; }
+  .mk-prom{ width:44px; height:44px; font-size:24px; border:3px solid #3563d6; box-shadow:0 0 0 4px rgba(53,99,214,.2),0 4px 11px rgba(20,40,80,.3); }
+  .mk-prom .hlbl{ position:absolute; bottom:-16px; left:50%; transform:translateX(-50%); background:#3563d6; color:#fff; font-size:10px; font-weight:800; padding:0 7px; border-radius:20px; white-space:nowrap; }
   /* station marker */
   .stn{ display:flex; align-items:center; gap:4px; }
   .stn .nd{ width:11px; height:11px; border-radius:50%; background:#fff; border:3px solid #555; box-shadow:0 1px 3px rgba(0,0,0,.35); flex:0 0 auto; }
@@ -98,6 +100,7 @@
     <div class="lg" data-line="orange"><span class="ln" style="background:#cd5c1a;"></span>橙线</div>
     <div class="lg" data-line="sc"><span class="ln" style="background:#7a3fb0;"></span>有轨电车</div>
     <div class="lg" data-stn="1"><span class="e">🚉</span>车站</div>
+    <div class="lg" data-walk="1"><span class="e">🚶</span>步行路线</div>
     <span class="seg" style="margin-left:8px;">类别:</span>
     <div class="lg" data-cat="venue"><span class="e">🏟️</span>场馆</div>
     <div class="lg" data-cat="hotel"><span class="e">🏨</span>住宿</div>
@@ -153,10 +156,10 @@ const XHS={
 // ---- POIs (real lat,lng) ----
 const POIS=[
   {ll:[45.5285,-122.6637],cat:'venue',ic:'🏟️',hub:true,title:'Oregon Convention Center 基建场馆',sub:'点击进入「会场配套中心」'},
-  {ll:[45.5189,-122.6779],cat:'hotel',ic:'🏨',title:'The Nines',sub:'7/1–7/6 · Luxury Collection 五星',gmap:'The Nines Hotel Portland',addr:'525 SW Morrison St, Portland',
-   rows:[['位置','Morrison 站楼下就是电车站台'],['到会场','红线约 10 分钟'],['订房','2 Queen 双床 · 4 人入住 · 可免费取消']]},
-  {ll:[45.5213,-122.6804],cat:'hotel',ic:'🏨',title:'The Ritz-Carlton 丽兹',sub:'6/29–7/1 · 全城最新五星',gmap:'The Ritz-Carlton Portland',addr:'900 SW Washington St, Portland',
-   rows:[['位置','Galleria/SW 10th 站步行 2 街区'],['泳池','室内屋顶恒温泳池+Spa'],['换酒店','7/1 走到 Nines 仅 3 街区/5 分钟']]},
+  {ll:[45.5189,-122.6779],cat:'hotel',ic:'🏨',prom:1,plbl:'The Nines',title:'The Nines(7/1–7/6)',sub:'Luxury Collection 五星 · 红线就在门口',gmap:'The Nines Hotel Portland',addr:'525 SW Morrison St, Portland',
+   rows:[['🚉 最近站','Morrison/Yamhill(=Pioneer Square)——酒店门口就是 MAX 站台,步行 <1 分钟'],['🚆 到会场','红线直达 Convention Center 约 10 分钟,不换乘'],['🚶 去丽兹','7/1 换酒店:出门沿 SW Morrison 西行约 4 街区到 9th,北 1 街区到 Washington,约 5 分钟'],['订房','2 Queen 双床 · 4 人入住 · 可免费取消']]},
+  {ll:[45.5213,-122.6804],cat:'hotel',ic:'🏨',prom:1,plbl:'丽兹',title:'The Ritz-Carlton 丽兹(6/29–7/1)',sub:'全城最新五星 · 含屋顶泳池',gmap:'The Ritz-Carlton Portland',addr:'900 SW Washington St, Portland',
+   rows:[['🚉 最近站','Galleria/SW 10th 或 Library/SW 9th——南行约 2 街区(3–4 分钟)到 Morrison/Yamhill 红线'],['🚆 到会场','红线约 10–12 分钟到 Convention Center'],['🚶 去 Nines','7/1 换酒店:沿 SW Washington 东行到 5th/6th & Morrison,约 5 分钟'],['泳池','室内屋顶恒温泳池+Spa,孩子赛前放松']]},
   {ll:[45.5700,-122.5960],cat:'hotel',ic:'🏨',title:'Cascade Station 省钱住宿区',sub:'红线机场段 · 备选',gmap:'Cascade Station Portland Oregon',addr:'NE Cascades Pkwy, Portland',
    rows:[['特点','连锁酒店区,最便宜·新·治安好'],['到会场','红线约 20 分钟'],['周边','Target+超市+连锁餐厅']]},
   {ll:[45.5103,-122.7160],cat:'see',ic:'🎡',title:'Washington Park',sub:'红线直达 · 非赛日首选(半天)',gmap:'Washington Park Portland Oregon',addr:'Washington Park, Portland OR',
@@ -231,6 +234,17 @@ const STATIONS=[
   {ll:[45.5300,-122.6985],n:'NW 23rd(电车)',zh:'Nob Hill'},
   {ll:[45.5095,-122.6820],n:'PSU(南端)',zh:''}
 ];
+// ---- walking routes (hotel ↔ station / hotel ↔ hotel) ----
+const WALK=[
+  {pts:[[45.5213,-122.6804],[45.5189,-122.6779]],lbl:'7/1 换酒店 丽兹↔Nines · 步行约 5 分钟'},
+  {pts:[[45.5189,-122.6779],[45.5188,-122.6793]],lbl:'Nines → Morrison/Pioneer 站 · <1 分钟'},
+  {pts:[[45.5213,-122.6804],[45.5205,-122.6815]],lbl:'丽兹 → Galleria/SW 10th 站 · 3–4 分钟'}
+];
+const walkLayer=L.layerGroup().addTo(map);
+WALK.forEach(w=>{
+  L.polyline(w.pts,{color:'#444',weight:4,opacity:.8,dashArray:'2 9',lineCap:'round'}).bindTooltip(w.lbl,{sticky:true}).addTo(walkLayer);
+});
+
 const stnLayer=L.layerGroup().addTo(map);
 STATIONS.forEach(s=>{
   const html='<div class="stn'+(s.key?' key':'')+'"><div class="nd"></div><div class="nm">'+s.n+(s.zh?' <small>'+s.zh+'</small>':'')+'</div></div>';
@@ -241,10 +255,11 @@ STATIONS.forEach(s=>{
 // markers grouped by category
 const catLayers={};
 POIS.forEach(poi=>{
-  const big=poi.cat==='venue';
-  const html='<div class="mk '+(big?'mk-venue':'')+'">'+poi.ic+(poi.xhs?'<span class="bdg">小红</span>':'')+(big?'<span class="vlbl">会场</span>':'')+'</div>';
-  const icon=L.divIcon({html,className:'',iconSize:[big?54:34,big?54:34],iconAnchor:[big?27:17,big?27:17]});
-  const m=L.marker(poi.ll,{icon,title:poi.title});
+  const big=poi.cat==='venue', prom=poi.prom, sz=big?54:(prom?44:34);
+  const cls='mk '+(big?'mk-venue ':'')+(prom?'mk-prom':'');
+  const html='<div class="'+cls+'">'+poi.ic+(poi.xhs?'<span class="bdg">小红</span>':'')+(big?'<span class="vlbl">会场</span>':'')+(prom?'<span class="hlbl">'+poi.plbl+'</span>':'')+'</div>';
+  const icon=L.divIcon({html,className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
+  const m=L.marker(poi.ll,{icon,title:poi.title,zIndexOffset:prom?400:0});
   m.on('click',()=> poi.hub?openHub():openModal(poi));
   if(!catLayers[poi.cat]) catLayers[poi.cat]=L.layerGroup().addTo(map);
   m.addTo(catLayers[poi.cat]);
@@ -308,6 +323,8 @@ document.querySelectorAll('.lg[data-cat]').forEach(lg=>{ lg.addEventListener('cl
   if(catLayers[k]){ if(off) map.removeLayer(catLayers[k]); else catLayers[k].addTo(map); } }); });
 document.querySelector('.lg[data-stn]').addEventListener('click',function(){
   this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(stnLayer); else stnLayer.addTo(map); });
+document.querySelector('.lg[data-walk]').addEventListener('click',function(){
+  this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(walkLayer); else walkLayer.addTo(map); });
 </script>
 </body>
 </html>
