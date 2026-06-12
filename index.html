@@ -247,6 +247,11 @@
   .disccard ul{ padding-left:18px; margin:9px 0; }
   .disccard li{ margin-bottom:6px; }
   .disccard .ok{ margin-top:14px; width:100%; background:#1a73e8; color:#fff; border:none; border-radius:12px; padding:12px; font-size:14px; font-weight:800; cursor:pointer; }
+
+  #xhstoast{ position:fixed; left:50%; bottom:90px; transform:translateX(-50%) translateY(12px); z-index:2000; max-width:86%;
+       background:rgba(23,32,46,.95); color:#fff; font-size:13px; font-weight:700; padding:11px 18px; border-radius:14px;
+       box-shadow:0 8px 26px rgba(0,0,0,.3); opacity:0; pointer-events:none; transition:.25s; text-align:center; line-height:1.5; }
+  #xhstoast.on{ opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -325,24 +330,24 @@ const LINES={
 
 // ---- XHS post links ----
 const XHS={
-  kamen:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E5%90%83%E9%A5%AD%E6%8C%87%E5%8D%97',
-  yuan:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20Bellpine%20%E6%BC%82%E4%BA%AE%E9%A5%AD',
-  momo:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E4%BE%BF%E5%AE%9C%E5%A5%BD%E5%90%83%E5%A5%BD%E4%B9%B0%E5%A5%BD%E7%9C%8B%20%E6%94%BB%E7%95%A5',
-  lumos:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E7%BE%8E%E9%A3%9F%E5%90%88%E9%9B%86%20%E7%8C%AA%E8%84%9A%E9%A5%AD%20TANAKA',
-  jennifer:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20Super%20King%20%E7%94%9F%E8%9A%9D%E8%87%AA%E5%8A%A9',
-  lanting:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E5%90%83%E5%96%9D%E4%B9%B0%E4%BD%8F%20HACHI',
-  tujie:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E5%AF%BF%E5%8F%B8%E8%87%AA%E5%8A%A9%20AYCE',
-  fay:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E5%8D%81%E4%B8%83%E9%97%A8%20%E9%87%8D%E5%BA%86%E8%80%81%E7%81%AB%E9%94%85',
-  miriam:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E9%91%AB%E9%BC%8E%E8%BB%92',
-  huakai:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E9%B9%BF%E9%BC%8E%E8%AE%B0%20Duck%20House',
-  coredam:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20Coredam%20%E9%9F%A9%E9%A4%90%20%E7%94%9F%E8%85%8C%E8%9F%B9',
-  bvbuffet:'https://www.xiaohongshu.com/search_result?keyword=%E6%AF%94%E5%BC%97%E9%A1%BF%20%E6%B5%B7%E9%B2%9C%E8%87%AA%E5%8A%A9%20pho',
-  pizza:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E9%A1%B6%E7%BA%A7%E6%8A%AB%E8%90%A8',
-  kaoyu:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20%E5%9B%9B%E5%B7%9D%E5%85%84%E5%BC%9F%20%E7%83%A4%E9%B1%BC',
-  pittock:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20Pittock%20%E6%97%A5%E6%9C%AC%E8%8A%B1%E5%9B%AD%20%E7%8E%AB%E7%91%B0%E5%9B%AD',
-  omsisub:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20OMSI%20%E6%BD%9C%E8%89%87',
-  ritzpool:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20Ritz%20%E9%A1%B6%E6%A5%BC%E6%B3%B3%E6%B1%A0',
-  stay:'https://www.xiaohongshu.com/search_result?keyword=%E6%B3%A2%E7%89%B9%E5%85%B0%20Beaverton%20%E4%BD%8F%E5%AE%BF%20%E5%88%AB%E4%BD%8F%E9%94%99'
+  kamen:'波特兰 吃饭指南',
+  yuan:'波特兰 Bellpine 漂亮饭',
+  momo:'波特兰 便宜好吃好买好看 攻略',
+  lumos:'波特兰 美食合集 猪脚饭 TANAKA',
+  jennifer:'波特兰 Super King 生蚝自助',
+  lanting:'波特兰 吃喝买住 HACHI',
+  tujie:'波特兰 寿司自助 AYCE',
+  fay:'波特兰 十七门 重庆老火锅',
+  miriam:'波特兰 鑫鼎軒',
+  huakai:'波特兰 鹿鼎记 Duck House',
+  coredam:'波特兰 Coredam 韩餐 生腌蟹',
+  bvbuffet:'比弗顿 海鲜自助 pho',
+  pizza:'波特兰 顶级披萨',
+  kaoyu:'波特兰 四川兄弟 烤鱼',
+  pittock:'波特兰 Pittock 日本花园 玫瑰园',
+  omsisub:'波特兰 OMSI 潜艇',
+  ritzpool:'波特兰 Ritz 顶楼泳池',
+  stay:'波特兰 Beaverton 住宿 别住错'
 };
 
 // ---- POIs (real lat,lng) ----
@@ -633,8 +638,8 @@ function openModal(poi){
   if(poi.html){ html+=poi.html; }
   (poi.rows||[]).forEach(r=>{ html+='<div class="r"><span class="k">'+keyText(r[0])+'</span><div>'+r[1]+'</div></div>'; });
   if(poi.xhs){ html+='<div class="xhsq"><div class="t">📕 小红书实测</div>'+poi.xhs+'</div>'; }
-  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书攻略(点开在小红书搜出该篇)</div>';
-    poi.links.forEach(l=>{ const u=XHS[l.k]||l.k; html+='<a href="'+u+'" target="_blank" rel="noopener">📕 '+l.t+'<span class="ar">↗</span></a>'; }); html+='</div>'; }
+  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书攻略 · 点开在 rednote 搜索(已自动复制搜索词备用,可粘进 App)</div>';
+    poi.links.forEach(l=>{ const kw=(XHS[l.k]||l.k); const u='https://www.rednote.com/search_result?keyword='+encodeURIComponent(kw); html+='<a href="'+u+'" target="_blank" rel="noopener" onclick="copyKw(null,&quot;'+kw+'&quot;)">📕 '+l.t+'<span class="ar">↗</span></a>'; }); html+='</div>'; }
   document.getElementById('mBody').innerHTML=deEmoji(html);
   ov.classList.add('on');
 }
@@ -676,6 +681,13 @@ document.querySelector('.lg[data-stn]').addEventListener('click',function(){
   this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(stnLayer); else stnLayer.addTo(map); });
 document.querySelector('.lg[data-walk]').addEventListener('click',function(){
   this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(walkLayer); else walkLayer.addTo(map); });
+
+function showToast(msg){ var t=document.getElementById('xhstoast'); if(!t){ t=document.createElement('div'); t.id='xhstoast'; document.body.appendChild(t);} t.textContent=msg; t.className='on'; clearTimeout(window.__tt); window.__tt=setTimeout(function(){t.className='';},2600); }
+function fallback(kw){ var ta=document.createElement('textarea'); ta.value=kw; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy'); showToast('已复制「'+kw+'」 · 打开小红书 App 粘贴搜索');}catch(_){ showToast('搜索词:'+kw); } document.body.removeChild(ta); }
+function copyKw(e, kw){ if(e&&e.preventDefault)e.preventDefault();
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(kw).then(function(){ showToast('已复制「'+kw+'」 · 打开小红书 App 粘贴搜索'); }, function(){ fallback(kw); }); } else { fallback(kw); }
+  return false; }
+
 </script>
 
 <button class="disclink" onclick="document.getElementById('discov').classList.add('on')">ⓘ 免责声明</button>
