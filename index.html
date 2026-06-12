@@ -133,6 +133,13 @@
        background:rgba(38,46,62,.94); color:#fff; font-size:14px; font-weight:800; letter-spacing:-.3px;
        border:2.5px solid #fff; box-shadow:0 4px 12px rgba(23,32,46,.34); }
   .marker-cluster, .marker-cluster div{ background:none!important; }
+  /* hub hero */
+  .hub{ overflow:hidden; }
+  .hubhero{ position:relative; height:148px; margin-top:-2px; overflow:hidden; }
+  .hubhero img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .hubhero::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.34)); }
+  .hubhero-cap{ position:absolute; left:14px; bottom:11px; z-index:2; background:rgba(20,26,38,.6); color:#fff;
+       font-size:12px; font-weight:800; padding:4px 11px; border-radius:20px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
 
   /* Leaflet controls / tooltips / attribution */
   .leaflet-bar{ border:none !important; box-shadow:var(--sh-2) !important; border-radius:14px !important; overflow:hidden; }
@@ -268,6 +275,7 @@
 <!-- hub -->
 <div class="hubov" id="hubov"><div class="hub">
   <div class="sheethandle"></div>
+  <div class="hubhero"><img src="https://live.staticflickr.com/4060/4306335759_9a402cb062_b.jpg" alt="" onerror="this.closest('.hubhero').style.display='none'"/><div class="hubhero-cap">击剑主场馆 · Oregon Convention Center</div></div>
   <div class="hubhead"><button class="x" id="hubClose">✕</button>
     <div class="hic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a83c4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l7 2.5v5c0 4.2-2.8 7.3-7 8.8-4.2-1.5-7-4.6-7-8.8v-5l7-2.5z"/></svg></div>
     <div class="httl"><h2>会场配套中心</h2>
@@ -422,27 +430,27 @@ STATIONS.forEach(s=>{
 
 // ---- hero imagery (presentation only; matched by poi.title) ----
 const IMG={
-  'Oregon Convention Center 基建场馆':'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Oregon_Convention_Center_Aerial_Shot_%2833643203853%29.jpg/500px-Oregon_Convention_Center_Aerial_Shot_%2833643203853%29.jpg',
-  'The Nines(7/1–7/6)':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Meier_%26_Frank_Building.jpg/500px-Meier_%26_Frank_Building.jpg',
-  'The Ritz-Carlton 丽兹(6/29–7/1)':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Entrance_to_the_Ritz-Carlton_Hotel_in_Portland%2C_Oregon_%282025%29.jpg/500px-Entrance_to_the_Ritz-Carlton_Hotel_in_Portland%2C_Oregon_%282025%29.jpg',
-  'Cascade Station 省钱住宿区':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cascade_Station_shopping_center_Target_-_Portland%2C_Oregon.JPG/500px-Cascade_Station_shopping_center_Target_-_Portland%2C_Oregon.JPG',
-  'Washington Park':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Pdx_wash_mainentrance_sse.jpeg/500px-Pdx_wash_mainentrance_sse.jpeg',
-  "Powell's 书店":'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/PowellsBookstore.jpg/500px-PowellsBookstore.jpg',
-  'Pearl District / Nob Hill':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/NW_23rd_at_Irving.jpeg/500px-NW_23rd_at_Irving.jpeg',
+  'Oregon Convention Center 基建场馆':'https://live.staticflickr.com/4060/4306335759_9a402cb062_b.jpg',
+  'The Nines(7/1–7/6)':'https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?w=600&q=80&auto=format&fit=crop',
+  'The Ritz-Carlton 丽兹(6/29–7/1)':'https://images.unsplash.com/photo-1600435335786-d74d2bb6de37?w=600&q=80&auto=format&fit=crop',
+  'Cascade Station 省钱住宿区':'https://images.unsplash.com/photo-1677129667171-92abd8740fa3?w=600&q=80&auto=format&fit=crop',
+  'Washington Park':'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=600&q=80&auto=format&fit=crop',
+  "Powell's 书店":'https://live.staticflickr.com/81/244753511_4b047d9a19_b.jpg',
+  'Pearl District / Nob Hill':'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&q=80&auto=format&fit=crop',
   'Pioneer Square 市中心核心':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Pioneer-SquareDaytime.jpg/500px-Pioneer-SquareDaytime.jpg',
-  '兰苏中式园林':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/ClassChineseGardenPano.jpg/500px-ClassChineseGardenPano.jpg',
-  'Tom McCall 河滨公园 + 7/4 烟花':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Tom_McCall_Waterfront_Park%2C_Willamette_River%2C_Portland_-_DPLA_-_8530ee13c0be47e3b4040550f1928858.jpg/500px-Tom_McCall_Waterfront_Park%2C_Willamette_River%2C_Portland_-_DPLA_-_8530ee13c0be47e3b4040550f1928858.jpg',
-  'OMSI 科学工业博物馆':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Oregon_Museum_of_Science_and_Industry_%28OMSI%29%2C_Portland_-_DPLA_-_2807ab2a7531b058b67a63a25388945b.jpg/500px-Oregon_Museum_of_Science_and_Industry_%28OMSI%29%2C_Portland_-_DPLA_-_2807ab2a7531b058b67a63a25388945b.jpg',
+  '兰苏中式园林':'https://images.unsplash.com/photo-1703162513864-ccd2e060875f?w=600&q=80&auto=format&fit=crop',
+  'Tom McCall 河滨公园 + 7/4 烟花':'https://images.unsplash.com/photo-1601747297625-cf77828558db?w=600&q=80&auto=format&fit=crop',
+  'OMSI 科学工业博物馆':'https://live.staticflickr.com/65535/49601468022_c5afa44670_b.jpg',
   '市中心中餐三件套':'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Chicken%2C_Rice_%26_Peanut_Sauce_at_Nong%27s_Khao_Man_Gai%2C_Portland%2C_Oregon%2C_2025.jpg/500px-Chicken%2C_Rice_%26_Peanut_Sauce_at_Nong%27s_Khao_Man_Gai%2C_Portland%2C_Oregon%2C_2025.jpg',
-  'Lloyd 会场旁':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Portland_July_2017_31_%28Lloyd_Center%29.jpg/500px-Portland_July_2017_31_%28Lloyd_Center%29.jpg',
-  'Jade District 82nd 中餐大本营':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Dim_sum_cart_-_Wellington%2C_New_Zealand.jpg/500px-Dim_sum_cart_-_Wellington%2C_New_Zealand.jpg',
-  'Beaverton 西区 · 火锅+亚超':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Shanghai_hot_pots-20150518-RM-102531.jpg/500px-Shanghai_hot_pots-20150518-RM-102531.jpg',
-  'Salt & Straw 冰淇淋':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Salt_%26_Straw.jpg/500px-Salt_%26_Straw.jpg',
-  '市中心咖啡 · 甜甜圈':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Matcha_tea_latte_with_rosetta_latte_art.jpg/500px-Matcha_tea_latte_with_rosetta_latte_art.jpg',
-  'Coava Coffee 咖啡':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Coffee_and_breakfast_sandwich.jpg/500px-Coffee_and_breakfast_sandwich.jpg',
-  '会场旁 · 便捷咖啡小吃':'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Coffee_and_breakfast_sandwich.jpg/500px-Coffee_and_breakfast_sandwich.jpg',
-  '日料 · Brunch · 西餐(高分)':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Sushi_platter%2C_Nikko%2C_Japan.jpg/500px-Sushi_platter%2C_Nikko%2C_Japan.jpg',
-  '免税购物(俄勒冈无销售税)':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Nike_store_Broad_%26_Cedar_jeh.jpg/500px-Nike_store_Broad_%26_Cedar_jeh.jpg'
+  'Lloyd 会场旁':'https://live.staticflickr.com/3451/4563154134_2f1c55ef10_b.jpg',
+  'Jade District 82nd 中餐大本营':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HK_SKD_TKO_Hang_Hau_Nan_Fung_Plaza_mall_shop_Tao_Heung_Chinese_Restaurant_breakfast_dim_sum_bamboo_steamers_April_2025_R12S_02.jpg/500px-HK_SKD_TKO_Hang_Hau_Nan_Fung_Plaza_mall_shop_Tao_Heung_Chinese_Restaurant_breakfast_dim_sum_bamboo_steamers_April_2025_R12S_02.jpg',
+  'Beaverton 西区 · 火锅+亚超':'https://live.staticflickr.com/2212/1570029398_76ea696f65_b.jpg',
+  'Salt & Straw 冰淇淋':'https://live.staticflickr.com/1422/1218197263_25bb673c17_b.jpg',
+  '市中心咖啡 · 甜甜圈':'https://live.staticflickr.com/3794/12039772813_db35165b39_b.jpg',
+  'Coava Coffee 咖啡':'https://live.staticflickr.com/7138/13953176621_9d238e92c0_b.jpg',
+  '会场旁 · 便捷咖啡小吃':'https://live.staticflickr.com/2246/2427469950_9ebe827665_b.jpg',
+  '日料 · Brunch · 西餐(高分)':'https://live.staticflickr.com/2560/3899676987_70ba1bda19_b.jpg',
+  '免税购物(俄勒冈无销售税)':'https://live.staticflickr.com/3451/4563154134_2f1c55ef10_b.jpg'
 };
 const CATBADGE={ venue:'\u4f1a\u573a', hotel:'\u4f4f\u5bbf', see:'\u666f\u70b9', food:'\u7f8e\u98df', treat:'\u5496\u5561\u751c\u70b9' };
 // ---- custom teardrop pins (professional map-app style) ----
