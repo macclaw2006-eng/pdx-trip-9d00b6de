@@ -638,8 +638,8 @@ function openModal(poi){
   if(poi.html){ html+=poi.html; }
   (poi.rows||[]).forEach(r=>{ html+='<div class="r"><span class="k">'+keyText(r[0])+'</span><div>'+r[1]+'</div></div>'; });
   if(poi.xhs){ html+='<div class="xhsq"><div class="t">📕 小红书实测</div>'+poi.xhs+'</div>'; }
-  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书攻略 · 点一下复制搜索词 → 打开 rednote / 小红书 App 粘贴搜索即可看</div>';
-    poi.links.forEach(l=>{ const kw=(XHS[l.k]||l.k); html+='<a href="#" onclick="return copyKw(event,&quot;'+kw+'&quot;)">📕 '+l.t+'<span class="ar">⧉ 复制搜索词</span></a>'; }); html+='</div>'; }
+  if(poi.links&&poi.links.length){ html+='<div class="links"><div class="lt">📕 小红书攻略 · 点开自动跳 rednote / 小红书 App 搜索(已复制搜索词备用)</div>';
+    poi.links.forEach(l=>{ const kw=(XHS[l.k]||l.k); html+='<a href="#" onclick="return openXhs(event,&quot;'+kw+'&quot;)">📕 '+l.t+'<span class="ar">↗ App</span></a>'; }); html+='</div>'; }
   document.getElementById('mBody').innerHTML=deEmoji(html);
   ov.classList.add('on');
 }
@@ -688,6 +688,14 @@ function copyKw(e, kw){ if(e&&e.preventDefault)e.preventDefault();
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(kw).then(function(){ showToast('已复制「'+kw+'」 · 打开 rednote / 小红书 App 粘贴搜索'); }, function(){ fallback(kw); }); } else { fallback(kw); }
   return false; }
 
+
+function openXhs(e, kw){ if(e&&e.preventDefault)e.preventDefault();
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(kw).catch(function(){fallback(kw);}); } else { fallback(kw); } }catch(_){ fallback(kw); }
+  showToast('已复制「'+kw+'」 · 正在打开 App 搜索…(未装 App 则在 App 内粘贴)');
+  var isA=/android/i.test(navigator.userAgent);
+  var sc=(isA?'xhsdiscovery':'xhsdiscover')+'://search/result?keyword='+encodeURIComponent(kw);
+  setTimeout(function(){ try{ window.location.href=sc; }catch(_){} }, 80);
+  return false; }
 </script>
 
 <button class="disclink" onclick="document.getElementById('discov').classList.add('on')">ⓘ 免责声明</button>
