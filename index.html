@@ -32,11 +32,11 @@
        font-size:9.5px; font-weight:700; letter-spacing:.2px; padding:1px 7px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 5px rgba(20,40,80,.22); }
   /* station marker */
   .stn{ display:flex; align-items:center; gap:4px; }
-  .stn .nd{ width:11px; height:11px; border-radius:50%; background:#fff; border:3px solid #555; box-shadow:0 1px 3px rgba(0,0,0,.35); flex:0 0 auto; }
+  .stn .nd{ width:11px; height:11px; border-radius:50%; background:#fff; border:3px solid #7a8294; box-shadow:0 1px 3px rgba(0,0,0,.35); flex:0 0 auto; }
   .stn .nm{ background:rgba(255,255,255,.93); border:1px solid #d8dee8; border-radius:5px; padding:1px 5px; font-size:10px; font-weight:700; color:#3a4757; white-space:nowrap; box-shadow:0 1px 2px rgba(0,0,0,.12); }
   .stn .nm small{ color:#8a93a8; font-weight:600; }
-  .stn.key .nd{ width:13px; height:13px; border-color:#e23744; }
-  .stn.key .nm{ border-color:#f3b8bd; color:#1c2433; }
+  .stn.key .nd{ width:13px; height:13px; border-color:#a83c4a; }
+  .stn.key .nm{ border-color:#dcc3c7; color:#1c2433; }
 
   /* modal (reused) */
   .ov{ position:fixed; inset:0; background:rgba(15,22,38,.55); display:none; align-items:center; justify-content:center; z-index:1200; padding:18px; }
@@ -105,15 +105,42 @@
   html,body{ height:100%; }
   body{ overflow:hidden; }
   header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:env(safe-area-inset-top) 0 0; pointer-events:none; }
-  header h1{ display:inline-block; margin:8px 0 0 10px; font-size:14px; background:rgba(255,255,255,.95);
-       padding:6px 12px; border-radius:20px; box-shadow:0 2px 8px rgba(20,40,80,.16); pointer-events:auto; }
-  header .hint{ display:none; }
-  .bar{ position:fixed; top:calc(env(safe-area-inset-top) + 47px); left:0; right:0; z-index:900; margin:0;
-       padding:0 10px; display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  .brand{ display:inline-flex; align-items:center; gap:8px; margin:10px 0 0 12px; background:rgba(255,255,255,.97);
+       padding:8px 14px 8px 10px; border-radius:14px; box-shadow:0 6px 22px rgba(23,32,46,.13); pointer-events:auto; }
+  .brand .bdg-ic{ width:26px; height:26px; border-radius:8px; background:#17202e; display:flex; align-items:center; justify-content:center; }
+  .brand .bt{ font-size:14px; font-weight:800; color:#17202e; letter-spacing:-.2px; }
+  .brand .bs{ font-size:11px; font-weight:700; color:#9aa3b5; border-left:1px solid #e6e9ef; padding-left:8px; }
+  .bar{ position:fixed; top:calc(env(safe-area-inset-top) + 56px); left:0; right:0; z-index:900; margin:0;
+       padding:0 12px 6px; display:flex; flex-wrap:nowrap; gap:7px; overflow-x:auto; -webkit-overflow-scrolling:touch;
        scrollbar-width:none; pointer-events:none; background:none; border:none; }
   .bar::-webkit-scrollbar{ display:none; }
   .bar .seg{ display:none; }
-  .bar .lg{ flex:0 0 auto; pointer-events:auto; background:rgba(255,255,255,.96); box-shadow:0 2px 6px rgba(20,40,80,.16); border:none; }
+  .bar .lg{ flex:0 0 auto; pointer-events:auto; background:rgba(255,255,255,.97); box-shadow:0 3px 10px rgba(23,32,46,.10);
+       border:none; font-size:12px; font-weight:700; color:#3a455c; padding:6px 12px; border-radius:18px; }
+  .bar .lg.sep{ width:1px; padding:0; background:transparent; box-shadow:none; pointer-events:none; }
+  .bar .lg .dotc{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .bar .lg.off{ opacity:1; background:rgba(244,245,248,.92); color:#aab1c2; }
+  .bar .lg.off .dotc,.bar .lg.off .ln{ opacity:.35; }
+  /* FABs */
+  .fab-list{ bottom:calc(env(safe-area-inset-bottom) + 78px); }
+  /* list view */
+  .listov{ position:fixed; inset:0; z-index:1150; background:rgba(15,22,38,.18); display:none; align-items:flex-end; }
+  .listov.on{ display:flex; }
+  .listpanel{ width:100%; max-width:600px; margin:0 auto; background:#fff; border-radius:22px 22px 0 0; max-height:78vh;
+       display:flex; flex-direction:column; box-shadow:0 -10px 30px rgba(0,0,0,.22); }
+  .listhead{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px 10px; font-size:16px; font-weight:800; color:#17202e; }
+  .listhead .x{ width:29px; height:29px; border-radius:50%; background:#eef1f7; color:#8a93a8; border:none; font-size:15px; }
+  .listbody{ overflow-y:auto; padding:0 14px calc(env(safe-area-inset-bottom) + 18px); }
+  .lsec{ font-size:11.5px; font-weight:800; color:#9aa3b5; letter-spacing:.6px; margin:14px 6px 6px; }
+  .litem{ display:flex; align-items:center; gap:12px; padding:11px 8px; border-radius:14px; cursor:pointer; }
+  .litem:active{ background:#f4f6f9; }
+  .litem .lic{ flex:0 0 auto; width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .litem .lic svg{ display:block; }
+  .litem .lt1{ font-size:14px; font-weight:700; color:#1f2a3d; line-height:1.3; }
+  .litem .lt2{ font-size:11.5px; color:#8a93a8; margin-top:1px; }
+  .litem .chev{ margin-left:auto; color:#c4cad6; font-size:17px; font-weight:700; }
+  /* selected pin */
+  .pin.sel svg{ transform:scale(1.22); transform-origin:bottom center; filter:drop-shadow(0 5px 9px rgba(23,32,46,.4)); }
   #map{ position:fixed; inset:0; height:auto; z-index:1; }
   /* bottom sheets */
   .ov,.hubov{ background:rgba(15,22,38,.16); align-items:flex-end; padding:0; backdrop-filter:none; }
@@ -132,30 +159,37 @@
 </head>
 <body>
   <header>
-    <h1>🚆 波特兰轻轨地理地图 · 击剑家庭版</h1>
-    <div class="hint">真实地图底图 · MAX 各线按官方颜色标注 · <b>点任意图标看详情</b>(含 Google 地图地址 + 小红书帖子)· 可平移缩放</div>
+    <div class="brand"><span class="bdg-ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span><span class="bt">Portland · 击剑家庭地图</span><span class="bs">6/29 – 7/6</span></div>
   </header>
 
   <div class="bar" id="bar">
-    <span class="seg">线路:</span>
-    <div class="lg" data-line="red"><span class="ln" style="background:#d8232a;"></span>红线</div>
-    <div class="lg" data-line="blue"><span class="ln" style="background:#1a52a8;"></span>蓝线</div>
-    <div class="lg" data-line="green"><span class="ln" style="background:#0a8a3f;"></span>绿线</div>
-    <div class="lg" data-line="yellow"><span class="ln" style="background:#f5c518;"></span>黄线</div>
-    <div class="lg" data-line="orange"><span class="ln" style="background:#cd5c1a;"></span>橙线</div>
-    <div class="lg" data-line="sc"><span class="ln" style="background:#7a3fb0;"></span>有轨电车</div>
-    <div class="lg" data-stn="1"><span class="e">🚉</span>车站</div>
-    <div class="lg" data-walk="1"><span class="e">🚶</span>步行路线</div>
-    <span class="seg" style="margin-left:8px;">类别:</span>
-    <div class="lg" data-cat="venue"><span class="e">🏟️</span>场馆</div>
-    <div class="lg" data-cat="hotel"><span class="e">🏨</span>住宿</div>
-    <div class="lg" data-cat="see"><span class="e">🎡</span>景点</div>
-    <div class="lg" data-cat="food"><span class="e">🍜</span>美食</div>
-    <div class="lg" data-cat="treat"><span class="e">🍦</span>甜点咖啡</div>
+    <div class="lg" data-cat="venue"><span class="dotc" style="background:#a83c4a"></span>场馆</div>
+    <div class="lg" data-cat="hotel"><span class="dotc" style="background:#42607d"></span>住宿</div>
+    <div class="lg" data-cat="see"><span class="dotc" style="background:#4e8a72"></span>景点</div>
+    <div class="lg" data-cat="food"><span class="dotc" style="background:#bd7a3c"></span>美食</div>
+    <div class="lg" data-cat="treat"><span class="dotc" style="background:#8f6a8e"></span>咖啡甜点</div>
+    <div class="lg sep"></div>
+    <div class="lg" data-line="red"><span class="ln" style="background:#c4525c;"></span>红线</div>
+    <div class="lg" data-line="blue"><span class="ln" style="background:#5b7fae;"></span>蓝线</div>
+    <div class="lg" data-line="green"><span class="ln" style="background:#5c9e7c;"></span>绿线</div>
+    <div class="lg" data-line="yellow"><span class="ln" style="background:#cfa94a;"></span>黄线</div>
+    <div class="lg" data-line="orange"><span class="ln" style="background:#c08055;"></span>橙线</div>
+    <div class="lg" data-line="sc"><span class="ln" style="background:#9678b6;"></span>电车</div>
+    <div class="lg" data-stn="1">车站名</div>
+    <div class="lg" data-walk="1">步行线</div>
   </div>
 
   <div id="map"></div>
-  <button class="fab" id="locateBtn" title="定位我的位置">📍</button>
+  <button class="fab" id="locateBtn" title="定位我的位置"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3a455c" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2" fill="#3a455c" stroke="none"/><circle cx="12" cy="12" r="8"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg></button>
+  <button class="fab fab-list" id="listBtn" title="列表"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a455c" stroke-width="2.2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.6" cy="6" r="1.4" fill="#3a455c" stroke="none"/><circle cx="3.6" cy="12" r="1.4" fill="#3a455c" stroke="none"/><circle cx="3.6" cy="18" r="1.4" fill="#3a455c" stroke="none"/></svg></button>
+
+  <!-- list view -->
+  <div class="listov" id="listov">
+    <div class="listpanel">
+      <div class="listhead"><span>全部地点</span><button class="x" id="listClose">✕</button></div>
+      <div class="listbody" id="listbody"></div>
+    </div>
+  </div>
 
 <!-- hub -->
 <div class="hubov" id="hubov"><div class="hub">
@@ -179,12 +213,12 @@
 <script>
 // ---- MAX line paths (approximate corridors, lat,lng) ----
 const LINES={
-  red:{color:'#d8232a',pts:[[45.4925,-122.8035],[45.5103,-122.7160],[45.5193,-122.6915],[45.5205,-122.6815],[45.5188,-122.6790],[45.5225,-122.6730],[45.5290,-122.6660],[45.5285,-122.6637],[45.5300,-122.6560],[45.5335,-122.6215],[45.5310,-122.5790],[45.5305,-122.5635],[45.5470,-122.5905],[45.5700,-122.5960],[45.5868,-122.5935]]},
-  blue:{color:'#1a52a8',pts:[[45.5230,-122.8690],[45.5045,-122.8190],[45.4925,-122.8035]],pts2:[[45.5305,-122.5635],[45.5160,-122.4880],[45.5025,-122.4245]]},
-  green:{color:'#0a8a3f',pts:[[45.5095,-122.6820],[45.5188,-122.6790],[45.5290,-122.6660],[45.5305,-122.5635],[45.5117,-122.5635],[45.4720,-122.5680]]},
-  yellow:{color:'#f5c518',pts:[[45.6065,-122.6855],[45.5650,-122.6755],[45.5460,-122.6695],[45.5290,-122.6660],[45.5188,-122.6790],[45.5095,-122.6820]]},
-  orange:{color:'#cd5c1a',pts:[[45.5095,-122.6820],[45.5045,-122.6705],[45.5040,-122.6660],[45.4790,-122.6510],[45.4460,-122.6420]]},
-  sc:{color:'#7a3fb0',dash:'6 8',pts:[[45.5305,-122.6985],[45.5290,-122.6850],[45.5230,-122.6820],[45.5120,-122.6790],[45.5005,-122.6710]]}
+  red:{color:'#c4525c',pts:[[45.4925,-122.8035],[45.5103,-122.7160],[45.5193,-122.6915],[45.5205,-122.6815],[45.5188,-122.6790],[45.5225,-122.6730],[45.5290,-122.6660],[45.5285,-122.6637],[45.5300,-122.6560],[45.5335,-122.6215],[45.5310,-122.5790],[45.5305,-122.5635],[45.5470,-122.5905],[45.5700,-122.5960],[45.5868,-122.5935]]},
+  blue:{color:'#5b7fae',pts:[[45.5230,-122.8690],[45.5045,-122.8190],[45.4925,-122.8035]],pts2:[[45.5305,-122.5635],[45.5160,-122.4880],[45.5025,-122.4245]]},
+  green:{color:'#5c9e7c',pts:[[45.5095,-122.6820],[45.5188,-122.6790],[45.5290,-122.6660],[45.5305,-122.5635],[45.5117,-122.5635],[45.4720,-122.5680]]},
+  yellow:{color:'#cfa94a',pts:[[45.6065,-122.6855],[45.5650,-122.6755],[45.5460,-122.6695],[45.5290,-122.6660],[45.5188,-122.6790],[45.5095,-122.6820]]},
+  orange:{color:'#c08055',pts:[[45.5095,-122.6820],[45.5045,-122.6705],[45.5040,-122.6660],[45.4790,-122.6510],[45.4460,-122.6420]]},
+  sc:{color:'#9678b6',dash:'6 8',pts:[[45.5305,-122.6985],[45.5290,-122.6850],[45.5230,-122.6820],[45.5120,-122.6790],[45.5005,-122.6710]]}
 };
 
 // ---- XHS post links ----
@@ -325,13 +359,43 @@ function pinIcon(poi){
   return L.divIcon({html:'<div class="pin">'+svg+lbl+dot+'</div>',className:'pinroot', iconSize:[w,h], iconAnchor:[w/2,h], popupAnchor:[0,-h]});
 }
 const catLayers={};
-const markerById={};
+const poiMarkers=[];
+let selMarker=null;
+function selectMarker(m){
+  if(selMarker){ const el=selMarker.getElement(); if(el){ const p=el.querySelector('.pin'); if(p) p.classList.remove('sel'); } }
+  selMarker=m;
+  if(m){ const el=m.getElement(); if(el){ const p=el.querySelector('.pin'); if(p) p.classList.add('sel'); } }
+}
 POIS.forEach((poi,idx)=>{
   const m=L.marker(poi.ll,{icon:pinIcon(poi),title:poi.title,zIndexOffset:(poi.cat==='venue'?600:(poi.prom?400:0)),riseOnHover:true});
-  m.on('click',()=>{ focusOn(poi.ll); poi.hub?openHub():openModal(poi); });
+  m.on('click',()=>{ selectMarker(m); focusOn(poi.ll); poi.hub?openHub():openModal(poi); });
   if(!catLayers[poi.cat]) catLayers[poi.cat]=L.layerGroup().addTo(map);
   m.addTo(catLayers[poi.cat]);
+  poiMarkers.push({poi,m});
 });
+
+// ---- list view ----
+const CATNAME={venue:'比赛场馆',hotel:'住宿',see:'景点 · 购物',food:'美食',treat:'咖啡 · 甜点'};
+const listBody=document.getElementById('listbody');
+['venue','hotel','see','food','treat'].forEach(cat=>{
+  const items=poiMarkers.filter(x=>x.poi.cat===cat);
+  if(!items.length) return;
+  const sec=document.createElement('div'); sec.className='lsec'; sec.textContent=CATNAME[cat]; listBody.appendChild(sec);
+  items.forEach(({poi,m})=>{
+    const col=CATCOLOR[cat]||'#666';
+    const it=document.createElement('div'); it.className='litem';
+    it.innerHTML='<div class="lic" style="background:'+col+'1c"><svg width="19" height="19" viewBox="0 0 24 24" fill="'+col+'"><path d="'+(GLYPH[cat]||'')+'"/></svg></div>'
+      +'<div><div class="lt1">'+poi.title+'</div><div class="lt2">'+(poi.sub||'')+'</div></div><span class="chev">›</span>';
+    it.addEventListener('click',()=>{ closeList(); selectMarker(m); focusOn(poi.ll); poi.hub?openHub():openModal(poi); });
+    listBody.appendChild(it);
+  });
+});
+const listov=document.getElementById('listov');
+function openList(){ listov.classList.add('on'); }
+function closeList(){ listov.classList.remove('on'); }
+document.getElementById('listBtn').addEventListener('click',openList);
+document.getElementById('listClose').addEventListener('click',closeList);
+listov.addEventListener('click',e=>{ if(e.target===listov) closeList(); });
 
 // ---- VENUE HUB ----
 const HUB=[
@@ -378,7 +442,7 @@ function openModal(poi){
   document.getElementById('mBody').innerHTML=html;
   ov.classList.add('on');
 }
-function closeModal(){ ov.classList.remove('on'); }
+function closeModal(){ ov.classList.remove('on'); selectMarker(null); }
 document.getElementById('closeBtn').addEventListener('click',closeModal);
 ov.addEventListener('click',e=>{ if(e.target===ov) closeModal(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(ov.classList.contains('on')) closeModal(); else closeHub(); } });
