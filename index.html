@@ -347,7 +347,18 @@ const XHS={
   pittock:'波特兰 Pittock 日本花园 玫瑰园',
   omsisub:'波特兰 OMSI 潜艇',
   ritzpool:'波特兰 Ritz 顶楼泳池',
-  stay:'波特兰 Beaverton 住宿 别住错'
+  stay:'波特兰 Beaverton 住宿 别住错',
+  saburo:'Saburo 波特兰 寿司',
+  sumo:'Sumo Sushi Oregon City 自助',
+  kura:'Kura Sushi 比弗顿',
+  murata:'Murata 波特兰 日料',
+  akizawa:'秋泽 Akizawa 波特兰 日料',
+  chaotianmen:'朝天门 波特兰 Beaverton 川菜',
+  shudao:'蜀道 Sichuan Taste 波特兰 川菜',
+  tipsy:'Tipsy Teapot 波特兰 川菜',
+  hotpotpalace:'Hotpot Palace Tigard 火锅自助',
+  weiding:'味鼎 Tasty Pot 波特兰 82nd',
+  sichuanbros:'四川兄弟 烤鱼 Vancouver'
 };
 
 // ---- POIs (real lat,lng) ----
@@ -396,7 +407,18 @@ const POIS=[
   {ll:[45.5230,-122.6810],cat:'food',ic:'🍣',title:'日料 · Brunch · 西餐(高分)',sub:'市中心一带 · 非赛日正餐',xhs:'卡门:Ryoma 拉面便宜量足、Ox 牛排必点偏咸;小圓:Bellpine 漂亮饭征服味蕾',gmap:'Akizawa Japanese Bistro Portland',addr:'市中心一带,Portland',links:[{t:'卡门·波特兰吃饭指南',k:'kamen'},{t:'小圓·top漂亮饭 Bellpine',k:'yuan'},{t:'0卡momo·Portland攻略(日料)',k:'momo'},{t:'灰灰·波特兰顶级披萨',k:'pizza'}],
    rows:[['Akizawa / Murata','强推日料'],['Ryoma Ramen','拉面便宜量足'],['Daily Feast','早午餐,三文鱼炒蛋'],['Ox / Bellpine','高端西餐"漂亮饭"']]},
   {ll:[45.5530,-122.6650],cat:'see',ic:'🛍️',title:'免税购物(俄勒冈无销售税)',sub:'西区/郊区 · 中国游客最爱',xhs:'0卡momo:Adidas 员工店不用员工邀请,App 预约即可,全场 5 折款新码全',gmap:'Adidas Employee Store Portland',addr:'5040 NE 9th Ave, Portland(Adidas 员工店)',links:[{t:'0卡momo·便宜好吃好买攻略',k:'momo'}],
-   rows:[['Adidas 员工店','免邀约,App 预约,约 5 折'],['市区免税','Columbia 旗舰 / Nike'],['Woodburn 奥莱','大型 outlet,需租车'],['Washington Square','西区大商场']]}
+   rows:[['Adidas 员工店','免邀约,App 预约,约 5 折'],['市区免税','Columbia 旗舰 / Nike'],['Woodburn 奥莱','大型 outlet,需租车'],['Washington Square','西区大商场']]},
+  {ll:[45.47392,-122.6483],cat:'food',ic:'🍣',title:'Saburo 寿司(性价比之王)',sub:'Sellwood · 老店 · 巨大份手握',xhs:'北之辰晞:一个手握有手那么大、鱼超新鲜,两个才$7-8;排队长但翻台快,基本都打包',gmap:'Saburo Sushi House Portland',addr:'1667 SE Bybee Blvd, Portland',links:[{t:'北之辰晞·性价比寿司王',k:'saburo'}]},
+  {ll:[45.33326,-122.58493],cat:'food',ic:'🍣',title:'Sumo Sushi 寿司自助(带娃)',sub:'Oregon City · AYCE 坐下点单',xhs:'幼稚园/兔姐:$30+ 寿司刺身天妇罗铁板烧任点,3 岁以下免费、带娃友好',gmap:'Sumo Sushi Grill Oregon City',addr:'19001 S Beavercreek Rd, Oregon City',links:[{t:'兔姐·Sumo寿司自助',k:'sumo'}]},
+  {ll:[45.48805,-122.79719],cat:'food',ic:'🍣',title:'Kura Sushi 回转寿司(带娃)',sub:'Beaverton · 连锁 · 小朋友爱',xhs:'比弗顿兔姐:5 点不排队,Yuzu 柚子系列 nigiri 必点;回转寿司带娃好玩',gmap:'Kura Sushi Beaverton',addr:'Beaverton, OR(Kura Sushi)',links:[{t:'兔姐·Kura回转寿司',k:'kura'}]},
+  {ll:[45.51147,-122.67869],cat:'food',ic:'🍣',title:'Murata 日料居酒屋',sub:'Downtown · 需预约 · 高性价比',xhs:'SR Cat:小店需预约,烤三文鱼下巴$25 一整个超值,蟹粥鲜;有地下停车',gmap:'Murata Japanese Portland',addr:'200 SW Market St, Portland',links:[{t:'SR Cat·Murata日料',k:'murata'}]},
+  {ll:[45.52056,-122.67921],cat:'food',ic:'🍣',title:'秋泽日料 omakase',sub:'Downtown · mini · 高分',xhs:'MissLE:downtown mini 日料需预约,toro/一鱼两吃惊艳,人均$80,食材新鲜,适合带娃',gmap:'Akizawa Japanese Bistro Portland',addr:'507 SW Broadway, Portland',links:[{t:'MissLE·秋泽日料探店',k:'akizawa'}]},
+  {ll:[45.44219,-122.82775],cat:'food',ic:'🥟',title:'朝天门 Sichuan Bistro 川菜',sub:'Beaverton · 量大 · 正宗',xhs:'督宝:量大,毛血旺水煮系列用盆上,泡椒牛蛙惊艳,辣子鸡酥脆;隔壁鹤茶楼甜品',gmap:'Sichuan Bistro Chaotianmen Beaverton',addr:'14625 SW Teal Blvd, Beaverton',links:[{t:'督宝·朝天门打卡',k:'chaotianmen'}]},
+  {ll:[45.51962,-122.67623],cat:'food',ic:'🥟',title:'蜀道 Sichuan Taste 川菜',sub:'Downtown · 菜品丰富',xhs:'Lu Xi:二刷好评,泡椒牛蛙嫩、金沙豆腐清爽,菜品比其他川菜丰富;位置稍远',gmap:'Sichuan Taste Portland 4th Ave',addr:'515 SW 4th Ave, Portland',links:[{t:'Lu Xi·蜀道川菜',k:'shudao'}]},
+  {ll:[45.51146,-122.68285],cat:'food',ic:'🥟',title:'Tipsy Teapot 川菜',sub:'Downtown · PSU 校内',xhs:'肖恩:downtown 新川菜,口水鸡红油香辣无骨,毛血旺超大份料足(血/百叶/毛肚)',gmap:'Tipsy Teapot Portland',addr:'1849 SW 6th Ave, Portland',links:[{t:'肖恩·Tipsy Teapot川菜',k:'tipsy'}]},
+  {ll:[45.44061,-122.74867],cat:'food',ic:'🍲',title:'Hotpot Palace 火锅烧烤自助',sub:'Tigard · 食材丰富',xhs:'Selina:Tigard 火锅烧烤自助,食材丰富、螺片鲍鱼蟹腿,人均$45,边吃边做菜好玩',gmap:'Hotpot Palace Tigard',addr:'11530 SW Pacific Hwy, Tigard',links:[{t:'Selina·Hotpot Palace自助',k:'hotpotpalace'}]},
+  {ll:[45.46134,-122.57905],cat:'food',ic:'🍲',title:'味鼎 Tasty Pot 台式小火锅',sub:'SE 82nd · 一人一锅',xhs:'SR Cat:台式小火锅,招牌臭臭锅+麻辣锅,一锅$18 量大配米饭,可加奶茶',gmap:'Tasty Pot Portland 82nd',addr:'10413 SE 82nd Ave, Portland',links:[{t:'SR Cat·味鼎台式小火锅',k:'weiding'}]},
+  {ll:[45.61769,-122.53372],cat:'food',ic:'🐟',title:'四川兄弟 烤鱼',sub:'河对岸 Vancouver · 良心价',xhs:'花花:$40 烤鱼吃不完,外酥里嫩垫满莲藕笋木耳,竹荪海鲜汤好喝;同 plaza 有 Chuck超市',gmap:'Szechuan Brothers Vancouver WA',addr:'13503 SE Mill Plain Blvd, Vancouver WA',links:[{t:'花花·四川兄弟烤鱼',k:'sichuanbros'}]}
 ];
 
 const CAT={ venue:{h:'h-venue'},hotel:{h:'h-hotel'},food:{h:'h-food'},see:{h:'h-see'},treat:{h:'h-treat'} };
@@ -478,7 +500,18 @@ const IMG={
   'Coava Coffee 咖啡':'https://live.staticflickr.com/7138/13953176621_9d238e92c0_b.jpg',
   '会场旁 · 便捷咖啡小吃':'https://live.staticflickr.com/2246/2427469950_9ebe827665_b.jpg',
   '日料 · Brunch · 西餐(高分)':'https://live.staticflickr.com/2560/3899676987_70ba1bda19_b.jpg',
-  '免税购物(俄勒冈无销售税)':'https://live.staticflickr.com/3451/4563154134_2f1c55ef10_b.jpg'
+  '免税购物(俄勒冈无销售税)':'https://live.staticflickr.com/3451/4563154134_2f1c55ef10_b.jpg',
+  'Saburo 寿司(性价比之王)':'https://live.staticflickr.com/3757/9865131454_b78e214d77_b.jpg',
+  'Sumo Sushi 寿司自助(带娃)':'https://live.staticflickr.com/2560/3899676987_70ba1bda19_b.jpg',
+  'Kura Sushi 回转寿司(带娃)':'https://live.staticflickr.com/3757/9865131454_b78e214d77_b.jpg',
+  'Murata 日料居酒屋':'https://live.staticflickr.com/2560/3899676987_70ba1bda19_b.jpg',
+  '秋泽日料 omakase':'https://live.staticflickr.com/3757/9865131454_b78e214d77_b.jpg',
+  '朝天门 Sichuan Bistro 川菜':'https://live.staticflickr.com/3355/3495771427_5153993e2f_b.jpg',
+  '蜀道 Sichuan Taste 川菜':'https://live.staticflickr.com/3355/3495771427_5153993e2f_b.jpg',
+  'Tipsy Teapot 川菜':'https://live.staticflickr.com/3355/3495771427_5153993e2f_b.jpg',
+  'Hotpot Palace 火锅烧烤自助':'https://live.staticflickr.com/2212/1570029398_76ea696f65_b.jpg',
+  '味鼎 Tasty Pot 台式小火锅':'https://live.staticflickr.com/2212/1570029398_76ea696f65_b.jpg',
+  '四川兄弟 烤鱼':'https://live.staticflickr.com/3355/3495771427_5153993e2f_b.jpg'
 };
 const CATBADGE={ venue:'\u4f1a\u573a', hotel:'\u4f4f\u5bbf', see:'\u666f\u70b9', food:'\u7f8e\u98df', treat:'\u5496\u5561\u751c\u70b9' };
 // ---- custom teardrop pins (professional map-app style) ----
