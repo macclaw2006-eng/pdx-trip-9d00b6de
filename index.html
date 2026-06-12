@@ -64,15 +64,25 @@
   .ov.on{ display:flex; }
   .modal{ background:#fff; border-radius:24px; max-width:430px; width:100%; max-height:86vh; overflow:auto; box-shadow:0 24px 70px rgba(17,24,39,.34); transform:scale(.9); opacity:0; transition:.18s; }
   .ov.on .modal{ transform:scale(1); opacity:1; }
-  .mhead{ padding:18px 18px 14px; color:var(--ink); position:relative; display:flex; gap:13px; align-items:flex-start; border-bottom:1px solid var(--hair); }
-  .mhead .ic{ flex:0 0 auto; width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; background:#eef1f7; box-shadow:inset 0 0 0 1px rgba(17,24,39,.04); }
-  .mhead .mttl{ flex:1; min-width:0; padding-right:30px; }
-  .mhead h2{ font-size:19px; font-weight:700; line-height:1.25; letter-spacing:-.02em; }
-  .mhead .sub{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 7px; margin-top:6px; }
-  .mpill{ font-size:11px; font-weight:700; letter-spacing:.01em; padding:2px 8px; border-radius:999px; white-space:nowrap; line-height:1.5; }
+  .mhead{ padding:0; color:var(--ink); position:relative; border-bottom:1px solid var(--hair); }
+  .mhero{ position:relative; height:172px; overflow:hidden; border-radius:28px 28px 0 0; background:#dde2ea; }
+  .mhero-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none; }
+  .mhero-ph{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .mhero-ph svg{ opacity:.95; filter:drop-shadow(0 3px 8px rgba(0,0,0,.22)); }
+  .mhero::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:74px; background:linear-gradient(180deg,rgba(10,13,20,0),rgba(10,13,20,.46)); pointer-events:none; z-index:1; }
+  .mbadge{ position:absolute; left:14px; bottom:13px; z-index:2; display:inline-flex; align-items:center; gap:5px; padding:5px 11px 5px 9px; border-radius:999px;
+       background:rgba(17,22,31,.5); -webkit-backdrop-filter:saturate(160%) blur(10px); backdrop-filter:saturate(160%) blur(10px);
+       border:1px solid rgba(255,255,255,.22); color:#fff; font-size:12px; font-weight:700; letter-spacing:.04em; box-shadow:0 2px 9px rgba(0,0,0,.26); }
+  .mbadge svg{ display:block; }
+  .mttl{ padding:15px 18px 16px; }
+  .mhead h2{ font-size:20px; font-weight:700; line-height:1.24; letter-spacing:-.022em; color:var(--ink); }
+  .mhead .sub{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 7px; margin-top:8px; }
+  .mpill{ font-size:11px; font-weight:700; letter-spacing:.01em; padding:2.5px 9px; border-radius:999px; white-space:nowrap; line-height:1.55; }
   .msub{ font-size:12.5px; color:var(--ink-3); font-weight:500; line-height:1.4; }
-  .mhead .x{ position:absolute; top:14px; right:15px; width:30px; height:30px; border-radius:50%; background:rgba(118,128,148,.13); color:var(--ink-3); border:none; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; }
-  .mhead .x:active{ background:rgba(118,128,148,.24); }
+  .mhead .x{ position:absolute; top:12px; right:12px; z-index:3; width:32px; height:32px; border-radius:50%;
+       background:rgba(18,22,30,.42); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); color:#fff;
+       border:1px solid rgba(255,255,255,.2); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  .mhead .x:active{ background:rgba(18,22,30,.62); }
   .mbody{ padding:16px 18px 26px; }
   .mbody .r{ display:flex; gap:13px; font-size:13.5px; color:var(--ink-2); padding:10px 0; line-height:1.55; border-top:1px solid var(--hair); align-items:baseline; }
   .mbody .r:first-child{ border-top:none; }
@@ -185,7 +195,7 @@
   .lsec{ font-size:11px; font-weight:700; color:var(--ink-4); letter-spacing:.06em; margin:16px 6px 6px; }
   .litem{ display:flex; align-items:center; gap:13px; padding:11px 9px; border-radius:14px; cursor:pointer; transition:background .12s ease; }
   .litem:active{ background:#f2f5f9; }
-  .litem .lic{ flex:0 0 auto; width:40px; height:40px; border-radius:13px; display:flex; align-items:center; justify-content:center; }
+  .litem .lic{ flex:0 0 auto; width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; }
   .litem .lic svg{ display:block; }
   .litem .lt1{ font-size:14px; font-weight:600; color:var(--ink); line-height:1.3; letter-spacing:-.01em; }
   .litem .lt2{ font-size:11.5px; color:var(--ink-3); margin-top:2px; }
@@ -202,6 +212,8 @@
   .ov.on .modal,.hubov.on .hub{ transform:translateY(0); }
   .hub{ max-height:80vh; }
   .sheethandle{ width:38px; height:5px; background:rgba(17,22,31,.14); border-radius:99px; margin:9px auto 2px; flex:0 0 auto; }
+  .modal{ position:relative; }
+  .ov .modal .sheethandle{ position:absolute; top:9px; left:50%; transform:translateX(-50%); z-index:4; margin:0; background:rgba(255,255,255,.7); box-shadow:0 1px 3px rgba(0,0,0,.18); }
   /* locate FAB */
   .fab{ position:fixed; right:14px; bottom:calc(env(safe-area-inset-bottom) + 20px); z-index:850; width:50px; height:50px;
        border-radius:50%; background:var(--glass-2); -webkit-backdrop-filter:var(--blur); backdrop-filter:var(--blur);
@@ -260,8 +272,15 @@
 <!-- modal -->
 <div class="ov" id="ov"><div class="modal">
   <div class="sheethandle"></div>
-  <div class="mhead" id="mhead"><button class="x" id="closeBtn">✕</button><div class="ic" id="mIc"></div>
-    <div class="mttl"><h2 id="mTitle"></h2><div class="sub" id="mSub"></div></div></div>
+  <div class="mhead" id="mhead">
+    <div class="mhero" id="mHero">
+      <div class="mhero-ph" id="mPh"></div>
+      <img class="mhero-img" id="mImg" alt="">
+      <button class="x" id="closeBtn">✕</button>
+      <div class="mbadge" id="mBadge"></div>
+    </div>
+    <div class="mttl"><h2 id="mTitle"></h2><div class="sub" id="mSub"></div></div>
+  </div>
   <div class="mbody" id="mBody"></div>
 </div></div>
 
@@ -393,6 +412,19 @@ STATIONS.forEach(s=>{
   L.marker(s.ll,{icon,interactive:false,zIndexOffset:-500,keyboard:false}).addTo(stnLayer);
 });
 
+// ---- hero imagery (presentation only; matched by poi.title) ----
+const IMG={
+  'Oregon Convention Center 基建场馆':'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Oregon_Convention_Center_Aerial_Shot_%2833643203853%29.jpg/500px-Oregon_Convention_Center_Aerial_Shot_%2833643203853%29.jpg',
+  'The Nines(7/1\u20137/6)':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Meier_%26_Frank_Building.jpg/500px-Meier_%26_Frank_Building.jpg',
+  'Washington Park':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Pdx_wash_mainentrance_sse.jpeg/500px-Pdx_wash_mainentrance_sse.jpeg',
+  "Powell's \u4e66\u5e97":'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/PowellsBookstore.jpg/500px-PowellsBookstore.jpg',
+  'Pioneer Square \u5e02\u4e2d\u5fc3\u6838\u5fc3':'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Pioneer-SquareDaytime.jpg/500px-Pioneer-SquareDaytime.jpg',
+  '\u5170\u82cf\u4e2d\u5f0f\u56ed\u6797':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/ClassChineseGardenPano.jpg/500px-ClassChineseGardenPano.jpg',
+  'Tom McCall \u6cb3\u6ee8\u516c\u56ed + 7/4 \u70df\u706b':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Tom_McCall_Waterfront_Park%2C_Willamette_River%2C_Portland_-_DPLA_-_8530ee13c0be47e3b4040550f1928858.jpg/500px-Tom_McCall_Waterfront_Park%2C_Willamette_River%2C_Portland_-_DPLA_-_8530ee13c0be47e3b4040550f1928858.jpg',
+  'Lloyd \u4f1a\u573a\u65c1':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Portland_July_2017_31_%28Lloyd_Center%29.jpg/500px-Portland_July_2017_31_%28Lloyd_Center%29.jpg',
+  'Salt & Straw \u51b0\u6dc7\u6dcb':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Salt_%26_Straw.jpg/500px-Salt_%26_Straw.jpg'
+};
+const CATBADGE={ venue:'\u4f1a\u573a', hotel:'\u4f4f\u5bbf', see:'\u666f\u70b9', food:'\u7f8e\u98df', treat:'\u5496\u5561\u751c\u70b9' };
 // ---- custom teardrop pins (professional map-app style) ----
 const CATCOLOR={ venue:'#a83c4a', hotel:'#42607d', food:'#bd7a3c', see:'#4e8a72', treat:'#8f6a8e' };
 const GLYPH={
@@ -435,7 +467,7 @@ function pinIcon(poi){
   const g=GLYPH[poi.cat]||'';
   const svg='<svg width="'+w+'" height="'+h+'" viewBox="0 0 24 31.7">'
     +'<path d="M12 0C6.2 0 1.5 4.7 1.5 10.5 1.5 18 12 31.5 12 31.5S22.5 18 22.5 10.5C22.5 4.7 17.8 0 12 0z" fill="'+col+'" stroke="#fff" stroke-width="1.5"/>'
-    +'<g transform="translate(6.2,4.6) scale(0.49)" fill="#fff">'+g+'</g></svg>';
+    +'<g transform="translate(5.5,3.9) scale(0.545)" fill="#fff">'+g+'</g></svg>';
   const lbl=(big||prom)?'<div class="pinlbl" style="background:'+col+'">'+(big?'会场':poi.plbl)+'</div>':'';
   const dot=poi.xhs?'<i class="reddot"></i>':'';
   return L.divIcon({html:'<div class="pin">'+svg+lbl+dot+'</div>',className:'pinroot', iconSize:[w,h], iconAnchor:[w/2,h], popupAnchor:[0,-h]});
@@ -466,7 +498,7 @@ const listBody=document.getElementById('listbody');
   items.forEach(({poi,m})=>{
     const col=CATCOLOR[cat]||'#666';
     const it=document.createElement('div'); it.className='litem';
-    it.innerHTML='<div class="lic" style="background:'+col+'1c">'+catIcon(cat,{size:20,sw:1.9})+'</div>'
+    it.innerHTML='<div class="lic" style="background:'+col+'1c;box-shadow:inset 0 0 0 1px '+col+'33">'+catIcon(cat,{size:23,sw:2.05})+'</div>'
       +'<div><div class="lt1">'+poi.title+'</div><div class="lt2">'+(poi.sub||'')+'</div></div><span class="chev">›</span>';
     it.addEventListener('click',()=>{ closeList(); selectMarker(m); focusOn(poi.ll); poi.hub?openHub():openModal(poi); });
     listBody.appendChild(it);
@@ -510,8 +542,13 @@ const ov=document.getElementById('ov');
 function openModal(poi){
   const c=CAT[poi.cat]||{h:'h-see'};
   document.getElementById('mhead').className='mhead';
-  const _ic=document.getElementById('mIc'); const _col=CATCOLOR[poi.cat]||'#8a93a8'; _ic.style.background=_col+'22';
-  _ic.innerHTML=catIcon(poi.cat,{size:24,sw:1.8});
+  const _col=CATCOLOR[poi.cat]||'#8a93a8';
+  document.getElementById('mHero').className='mhero '+(c.h||'');
+  document.getElementById('mPh').innerHTML=lsvg(poi.cat,{color:'rgba(255,255,255,.94)',size:56,sw:1.45});
+  const _img=document.getElementById('mImg'); const _src=IMG[poi.title];
+  if(_src){ _img.onerror=function(){ this.style.display='none'; }; _img.style.display='block'; _img.src=_src; }
+  else{ _img.removeAttribute('src'); _img.style.display='none'; }
+  document.getElementById('mBadge').innerHTML=lsvg(poi.cat,{color:'#fff',size:14,sw:2})+'<span>'+(CATBADGE[poi.cat]||'')+'</span>';
   const _t=String(poi.title); const _m=_t.match(/^([^（()]+?)\s*[（(]([^）)]+)[）)]\s*(.*)$/);
   let _name=_t,_pill=''; if(_m){ _name=(_m[1].trim()+(_m[3]?(' '+_m[3].trim()):'')).trim(); _pill=_m[2].trim(); }
   document.getElementById('mTitle').textContent=_name;
