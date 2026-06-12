@@ -236,6 +236,17 @@
   .fab:active{ transform:scale(.92); box-shadow:var(--sh-1); }
   .mepin{ width:16px; height:16px; border-radius:50%; background:#2a7fff; border:3px solid #fff; box-shadow:0 0 0 3px rgba(42,127,255,.32), 0 2px 6px rgba(42,127,255,.5); }
 
+
+  .disclink{ position:fixed; left:10px; bottom:calc(env(safe-area-inset-bottom) + 6px); z-index:840; font-size:10.5px; color:#7a8499; background:rgba(255,255,255,.84); padding:3px 9px; border-radius:12px; cursor:pointer; -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); border:1px solid rgba(0,0,0,.05); }
+  .discov{ position:fixed; inset:0; z-index:1300; background:rgba(15,22,38,.5); display:none; align-items:center; justify-content:center; padding:20px; }
+  .discov.on{ display:flex; }
+  .disccard{ background:#fff; border-radius:20px; max-width:440px; width:100%; max-height:82vh; overflow:auto; padding:22px 22px 18px; box-shadow:0 20px 60px rgba(0,0,0,.35); }
+  .disccard h3{ font-size:16.5px; color:#161d29; margin-bottom:10px; font-weight:800; }
+  .disccard p,.disccard li{ font-size:12.5px; color:#46546e; line-height:1.66; }
+  .disccard b{ color:#2a3242; }
+  .disccard ul{ padding-left:18px; margin:9px 0; }
+  .disccard li{ margin-bottom:6px; }
+  .disccard .ok{ margin-top:14px; width:100%; background:#1a73e8; color:#fff; border:none; border-radius:12px; padding:12px; font-size:14px; font-weight:800; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -666,5 +677,22 @@ document.querySelector('.lg[data-stn]').addEventListener('click',function(){
 document.querySelector('.lg[data-walk]').addEventListener('click',function(){
   this.classList.toggle('off'); if(this.classList.contains('off')) map.removeLayer(walkLayer); else walkLayer.addTo(map); });
 </script>
+
+<button class="disclink" onclick="document.getElementById('discov').classList.add('on')">ⓘ 免责声明</button>
+<div class="discov" id="discov" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="disccard">
+    <h3>免责声明</h3>
+    <p>本地图为击剑家庭自发整理的<b>非官方出行参考</b>，信息来自公开网络（Travel Portland、维基百科、小红书网友实测等）并经 AI 协助汇总，仅供参考，<b>不保证准确、完整或实时</b>。</p>
+    <ul>
+      <li>酒店/餐厅的营业状态、价格、房型与取消政策随时可能变动，出行或下单前请通过卡片内的 <b>Google 地图链接</b>或商家官方渠道再次确认。</li>
+      <li><b>比赛日程、检录时间、剑道分配以 USA Fencing 官方与 FencingTime Live 公布为准</b>，本图时刻仅供参考。</li>
+      <li>卡片配图多为免费图库（Unsplash/Flickr/维基共享）的<b>示意/代表图，未必为该地点实拍</b>，仅用于呈现氛围。</li>
+      <li>轻轨班次、车程与步行时间均为约数，请以当天 TriMet/Google 实时为准。</li>
+      <li>本图与 USA Fencing、Oregon Convention Center 及任何酒店/商家<b>无隶属或商业关系</b>，不构成推荐或广告。</li>
+      <li>使用本图即表示自行承担相关风险；制作者不对因使用本图产生的任何损失负责。请注意自身安全与财物。</li>
+    </ul>
+    <button class="ok" onclick="document.getElementById('discov').classList.remove('on')">知道了</button>
+  </div>
+</div>
 </body>
 </html>
